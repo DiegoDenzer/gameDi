@@ -2,4 +2,11 @@
 
 {% block content %}
     Bem Vindo ! {{ request.user }}
+    
+    {% if personagens %}
+
+    {% else %}
+        Sem Personagens
+    {% endif %}
+    
 {% endblock %}

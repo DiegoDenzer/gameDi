@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('allauth.urls')),
     path('', v.login, name="account_login"),
+    path('', include('base.urls'))
 
    # path('', views.logout_view, name='logout'),
 
