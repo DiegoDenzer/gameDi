@@ -5,16 +5,18 @@
 
 {% block content %}
 
-<form role="form" method="POST" action="{% url 'account_login' %}">
-     {% csrf_token %}
-     {{ form|crispy}}
+   <div class="container">
 
-    <div class="text-center">
-        <button type="submit">Entrar</button>
+    <form role="form" method="POST" action="{% url 'account_login' %}">
+         {% csrf_token %}
+         {{ form|crispy}}
+        <div class="text-center">
+            <button type="submit">Entrar</button>
+        </div>
+    </form>
+
+    <a class="btn btn-primary" href="{% url 'account_reset_password' %}"><small> {% trans "Forgot Password?" %}</small></a>
+    <a href="{{ signup_url }}" class="btn btn-primary"><small>Criar nova conta</small></a>
+
     </div>
-</form>
-
-<a class="text-light" href="{% url 'account_reset_password' %}"><small> {% trans "Forgot Password?" %}</small></a>
-<a href="{{ signup_url }}" class="text-light"><small>Criar nova conta</small></a>
-
 {% endblock %}

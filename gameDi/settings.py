@@ -27,6 +27,8 @@ INSTALLED_APPS = [
 
     'crispy_forms',
 
+    'base'
+
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -110,7 +112,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = "/home"
+LOGIN_REDIRECT_URL = "/personagens"
 
 MEDIA_URL = '/media/'
 
