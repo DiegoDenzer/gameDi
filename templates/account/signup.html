@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block content %}
+
+<div class="main-content bg-primary">
+    <div class="header bg-gradient-primary py-7 py-lg-8 mt--7">
+        <div class="container">
+            <div class="header-body text-center mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-md-2">
+                        <h1>{% trans "Sign Up" %}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="separator separator-bottom separator-skew zindex-100">
+            <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+            </svg>
+        </div>
+    </div>
+
+    <div class="container mt--8 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <div class="card bg-secondary shadow border-0">
+
+                    <div class="card-body px-lg-5 py-lg-5">
+                        <div class="text-center text-muted mb-4">
+                            <small>Criar com sua conta</small>
+                        </div>
+                    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                         {% csrf_token %}
+                         {{ form|crispy}}
+                        {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary my-4">Criar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6">
+                    <a class="text-light" href="{% url 'account_reset_password' %}"><small> {% trans "Forgot Password?" %}</small></a>
+                </div>
+                <div class="col-6 text-right">
+                    <a href="{{ signup_url }}" class="text-light"><small>Criar nova conta</small></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
