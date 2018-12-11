@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    Bem Vindo ! {{ request.user }}
-    
     {% if personagens %}
+        {% for personagem in personagens %}
+            {{ personagem.nome }} - {{ personagem.nivel }}
+            <br>
+        {% endfor %}
 
+        <br>
+        {% if personagens|length > 3 %}
+            <a href="{% url 'novo_personagem' %}">NOVO</a>
+        {% else %}
+            Voce já possui o limite maximo de personagens
+        {% endif %}
     {% else %}
-        Sem Personagens
+
+        Sem Personagens <br>
+        <a href="{% url 'novo_personagem' %}">NOVO</a>
+
     {% endif %}
     
 {% endblock %}

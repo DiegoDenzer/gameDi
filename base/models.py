@@ -3,36 +3,84 @@ from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
+from django.urls import reverse
+
+
+class Classe(models.Model):
+
+    nome = models.CharField(max_length=100)
+    ataque = models.PositiveSmallIntegerField(default=0)
+    defesa = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'classe'
+        ordering = ('-pk',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return self.nome
+
 
 class Arma(models.Model):
 
-    poder = models.PositiveSmallIntegerField()
-    compra = models.FloatField()  # valor de compra
-    venda = models.FloatField()  # valor de venda
-    update = models.PositiveSmallIntegerField()
+    poder = models.PositiveSmallIntegerField(default=1)
+    compra = models.FloatField(default=0)  # valor de compra
+    venda = models.FloatField(default=0)  # valor de venda
+    update = models.PositiveSmallIntegerField(default=0)
 
     imagem = models.ImageField(upload_to="armas")
 
     # nome do item
     nome = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'arma'
+        ordering = ('-pk',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return self.nome
+
+    def get_absolute_url(self):
+        return reverse('arma_detail', args=(self.pk,))
 
 
 class Armadura(models.Model):
 
-    poder = models.PositiveSmallIntegerField()
-    compra = models.FloatField()  # valor de compra
-    venda = models.FloatField()  # valor de venda
-    update = models.PositiveSmallIntegerField()
+    poder = models.PositiveSmallIntegerField(default=1)
+    compra = models.FloatField(default=0)  # valor de compra
+    venda = models.FloatField(default=0)  # valor de venda
+    update = models.PositiveSmallIntegerField(default=0)
 
     imagem = models.ImageField(upload_to="armas")
 
     # nome do item
     nome = models.CharField(max_length=100)
 
+    class Meta:
+        db_table = 'armadura'
+        ordering = ('-pk',)
 
-class Jogador(models.Model):
+    def __unicode__(self):
+        return u'%s' % self.pk
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.nome
+
+    def get_absolute_url(self):
+        return reverse('armadura_detail', args=(self.pk,))
+
+
+
+class Personagem(models.Model):
+
+    nome = models.CharField(max_length=30)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # campos que definem o player do jogo
     gold = models.PositiveIntegerField(default=0)  # dinheiro na mao
@@ -57,9 +105,26 @@ class Jogador(models.Model):
     # relacionamentos
     armas = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True)
     armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE , null=True)
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, null=True)
+
 
     # pontos ao subir de nivel
     pontos = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'personagem'
+        ordering = ('-pk',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return self.nome
+
+    def get_absolute_url(self):
+        return reverse('persoangem_detail', args=(self.pk,))
+
+
 
     # verifica se o player subiu de nivel
     def level_up(self):

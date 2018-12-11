@@ -1,9 +1,11 @@
 from django.urls import path
 
-from base.views import PersonagensView
-from . import views
+
+from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, Selecionar
 
 urlpatterns = [
-    path('', views.logout_view , name='logout'),
-    path('personagens', PersonagensView.as_view(), name='personagens')
+    path('', logout_view , name='logout'),
+    path('personagens', PersonagensListView.as_view(), name='personagens'),
+    path('novo_personagem', PersonagemCreatedView.as_view(), name='novo_personagem'),
+    path('selecionar/<int:player>', Selecionar.as_view(), name='selecao')
 ]
