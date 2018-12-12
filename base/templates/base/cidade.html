@@ -5,5 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    {{ player.name }}
+    {% include 'base/dados_personagem.html' %}
+    <br>
+
+    <a href="{% url 'quests' %}">Quests</a><br>
+    <a href="{% url 'alvos' %}">Duelo</a><br>
+    <a href="#">Loja</a><br>
+    <a href="#">Rank</a><br>
+
 {% endblock %}

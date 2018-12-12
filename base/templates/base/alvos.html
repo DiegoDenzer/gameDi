@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Lista Alvos
+{% endblock %}
+
+{% block content %}
+
+    {% for alvo in alvos %}
+
+        {{ alvo.nome }}<br>
+
+    {% endfor %}
+
+{% endblock %}

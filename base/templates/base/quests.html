@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quests
+{% endblock %}
+
+{% block content %}
+
+    {% include 'base/dados_personagem.html' %}
+    <br>
+    {% for quest in quests %}
+
+        Missão: {{ quest.nome }} - Nível:{{ quest.nivel }} - Energia: {{ quest.gasto_energia }} <a href="{% url 'quest' quest.pk %}">Fazer</a>
+
+    {% endfor %}
+
+{% endblock %}

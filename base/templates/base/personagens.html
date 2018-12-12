@@ -3,12 +3,15 @@
 {% block content %}
     {% if personagens %}
         {% for personagem in personagens %}
+            <a href="{% url 'cidade' personagem.pk %}">Se</a>
+            <a href="{% url 'deletar' personagem.pk %}">De</a>
             {{ personagem.nome }} - {{ personagem.nivel }}
             <br>
         {% endfor %}
 
         <br>
-        {% if personagens|length > 3 %}
+
+        {% if personagens|length < 3 %}
             <a href="{% url 'novo_personagem' %}">NOVO</a>
         {% else %}
             Voce já possui o limite maximo de personagens

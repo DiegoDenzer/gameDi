@@ -1,6 +1,7 @@
 import datetime
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 from django.urls import reverse
@@ -121,18 +122,19 @@ class Personagem(models.Model):
     def __str__(self):
         return self.nome
 
-    def get_absolute_url(self):
-        return reverse('persoangem_detail', args=(self.pk,))
+    def get_delete_url(self):
+        return reverse('deletar', args=(self.pk,))
 
-
+    def get_selecao_url(self):
+        return reverse('selecao', args=(self.pk,))
 
     # verifica se o player subiu de nivel
     def level_up(self):
         # definimos a quantidade de xp para cada nivel
-        experiencia_necessaria = {1: 10, 2: 20, 3: 30, 4: 50, 5: 80,
-                                  6: 130, 7: 210, 8: 340, 9: 480, 10: 630,
+        experiencia_necessaria = {1: 10, 2: 25, 3: 50, 4: 80, 5: 115,
+                                  6: 155, 7: 210, 8: 340, 9: 480, 10: 630,
                                   11: 790, 12: 970, 13: 1200, 14: 1600, 15: 2000,
-                                  16: 2500, 17: 3000, 18: 4000, 19: 5000, 20: 6000}
+                                  16: 2500, 17: 3000, 18: 4000, 19: 5200, 20: 6500}
 
         if self.experiencia >= experiencia_necessaria[self.nivel + 1]:
             self.nivel = self.nivel + 1  # sobe de nivel
@@ -148,8 +150,8 @@ class Personagem(models.Model):
     # funcao que recupera o player
     def refresh(self):
         # pega a hora atual
-        agora = datetime.datetime.now()
-
+     #   agora = datetime.datetime.now()
+        agora = timezone.now()
         # verifica se o usuario tem menos HP do que deveria
         if self.hp < self.vida * 10:
             # verifica quanto tempo passou desde a ultima atualizacao do hp
@@ -212,3 +214,22 @@ class Personagem(models.Model):
         else:
             # se nao existe nenhum update para fazer, atualiza o raiva_update
             self.raiva_update = agora
+
+
+class Quest(models.Model):
+    nivel = models.PositiveIntegerField(default=0)# Nivel necessario
+    nome = models.CharField(max_length=100)
+    gasto_energia = models.PositiveIntegerField(default=0)# gasto de energia
+    ganho_experiencia = models.PositiveIntegerField(default=0)# gasto de experiencia
+    ganho_gold = models.PositiveIntegerField(default=0)# ganho de gold
+    descricao = models.CharField(max_length=250)
+
+    class Meta:
+        db_table = 'quest'
+        ordering = ('-pk',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return self.nome
