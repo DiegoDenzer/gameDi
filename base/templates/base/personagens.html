@@ -3,7 +3,12 @@
 {% block content %}
     {% if personagens %}
         {% for personagem in personagens %}
-            <a href="{% url 'cidade' personagem.pk %}">Se</a>
+            <form method="post" action="{% url 'mundo' %}">
+                {% csrf_token %}
+                <input name="player" value="{{ personagem.pk }}" hidden="true">
+                <button type="submit">S</button>
+            </form>
+
             <a href="{% url 'deletar' personagem.pk %}">De</a>
             {{ personagem.nome }} - {{ personagem.nivel }}
             <br>
@@ -12,6 +17,7 @@
         <br>
 
         {% if personagens|length < 3 %}
+
             <a href="{% url 'novo_personagem' %}">NOVO</a>
         {% else %}
             Voce já possui o limite maximo de personagens

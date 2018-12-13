@@ -125,7 +125,7 @@ class Personagem(models.Model):
     def get_delete_url(self):
         return reverse('deletar', args=(self.pk,))
 
-    def get_selecao_url(self):
+    def get_absolute_url(self):
         return reverse('selecao', args=(self.pk,))
 
     # verifica se o player subiu de nivel
