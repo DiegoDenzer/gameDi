@@ -3,19 +3,51 @@
 {% block content %}
     Nome: {{ personagem.nome  }}<br>
     Nível: {{ personagem.nivel }}<br>
+    HP: {{ personagem.hp }} <br>
     Raiva: {{ personagem.raiva_atual }} / {{ personagem.raiva }}<br>
     Energia: {{ personagem.energia_atual }} / {{ personagem.energia }}<br>
     Experiencia: {{ personagem.experiencia }}<br>
     Gold: {{ personagem.gold  }}
-     {{  personagem.pontos }}
-    <br>
-    Atributos<br>
 
+    <br><br>
+    Atributos<br>
+    Pontos Diponiveis : {{  personagem.pontos }} <br>
     Ataque: {{ personagem.ataque }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_ataque' %}">Add</a>{% endif %} <br>
     Defesa: {{ personagem.defesa }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_defesa' %}">Add</a>{% endif %}<br>
     Vida: {{ personagem.vida }} {% if personagem.pontos > 0 %}       <a href="{% url 'add_vida' %}">Add</a>{% endif %}<br>
     Energia: {{ personagem.energia }} {% if personagem.pontos > 0 %} <a href="{% url 'add_energia' %}">Add</a>{% endif %}<br>
     Raiva: {{ personagem.raiva }} {% if personagem.pontos > 0 %}     <a href="{% url 'add_raiva' %}">Add</a>{% endif %}<br>
+
+    <br>
+    Equipamento
+    <br>
+    Arma : {{ personagem.armas }}<br>
+    Armadura : {{ personagem.armaduras }}
+    <br><br>
+    Inventario
+    <br>
+    {% for item in itens %}
+
+        {% if item.pocao is not None %}
+            {{ item }}
+            <a href="{% url 'pocao' item.pk %}">Usar</a> <br>
+        {% endif %}
+
+        {% if item.arma is not None %}
+            {{ item }}
+            <a href="{% url 'equipar' item.pk %}">Usar</a> <br>
+        {% endif %}
+
+        {% if item.armadura is not None %}
+            <a href="{% url 'equipar' item.pk %}">Usar</a> <br>
+        {% endif %}
+
+        {% if item.itemDrop is not None %}
+            {{ item }} <br>
+        {% endif %}
+
+    {% endfor %}
+    
 
     <a href="{% url 'mundo' %}">Mundo</a>
 

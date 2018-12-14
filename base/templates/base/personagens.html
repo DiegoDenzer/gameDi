@@ -3,21 +3,21 @@
 {% block content %}
     {% if personagens %}
         {% for personagem in personagens %}
-            <form method="post" action="{% url 'mundo' %}">
+             {{ personagem.nome }} - {{ personagem.nivel }}
+            <form method="post" id="my_form" action="{% url 'mundo' %}">
                 {% csrf_token %}
                 <input name="player" value="{{ personagem.pk }}" hidden="true">
-                <button type="submit">S</button>
+                <a onclick="document.getElementById('my_form').submit(); return false;">Entrar</a>
             </form>
 
             <a href="{% url 'deletar' personagem.pk %}">De</a>
-            {{ personagem.nome }} - {{ personagem.nivel }}
+
             <br>
         {% endfor %}
 
         <br>
 
         {% if personagens|length < 3 %}
-
             <a href="{% url 'novo_personagem' %}">NOVO</a>
         {% else %}
             Voce já possui o limite maximo de personagens

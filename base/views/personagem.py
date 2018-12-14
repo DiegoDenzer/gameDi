@@ -8,7 +8,7 @@ from django.views.generic import DetailView
 from pip._vendor import pkg_resources
 
 from base.forms import PersonagemForm
-from base.models import Personagem, Classe
+from base.models import Personagem, Classe, Inventario, Pocao, InventarioItem
 from base.util.util import valida_jogador
 
 
@@ -48,6 +48,27 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
 
             player.save()
 
+            # Cria Invetario para o personagem
+            inv = Inventario()
+            inv.personagem = player
+
+            inv.save()
+
+            # Tres Poçoes basicas
+            p_hp = Pocao.objects.get(pk=1)
+            p_energia = Pocao.objects.get(pk=2)
+            p_raiva = Pocao.objects.get(pk=3)
+
+
+            # Cria os inventarios itens
+            item_1 = InventarioItem()
+            item_1.inventario = inv
+            item_1.pocao = p_hp
+            item_1.save()
+
+            InventarioItem.objects.create(pocao=p_energia, inventario=inv)
+            InventarioItem.objects.create(pocao=p_raiva, inventario=inv)
+
             return redirect('personagens')
 
 
@@ -63,14 +84,14 @@ class PersonagemDeleteView(LoginRequiredMixin, View):
 
 class SelecionarView(LoginRequiredMixin, View):
     login_url = '/'
-
+    template = 'base/cidade.html'
     def get(self, request):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, jogador):
             jogador.refresh()
             jogador.save()
 
-        return render(request, 'base/cidade.html', {'personagem': jogador})
+        return render(request, self.template, {'personagem': jogador})
 
     def post(self, request):
         player = request.POST['player']
@@ -78,7 +99,7 @@ class SelecionarView(LoginRequiredMixin, View):
         jogador = Personagem.objects.get(pk=player)
         jogador.refresh()
         jogador.save()
-        return render(request, 'base/cidade.html', {'personagem': jogador})
+        return render(request, self.template, {'personagem': jogador})
 
 
 class PesonagemDetailView(LoginRequiredMixin, View):
@@ -88,7 +109,10 @@ class PesonagemDetailView(LoginRequiredMixin, View):
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            return render(request, self.template, {'personagem': personagem})
+            personagem.refresh()
+            inv = Inventario.objects.get(personagem=personagem)# Feito assim para ficar mais transparente pode não ser
+            itens = list(inv.itens.all()) # a melhor forma mas é mais e de facil entendimento
+            return render(request, self.template, {'personagem': personagem, 'itens': itens})
 
 
 def distribuirAtributo(personagem, atributo):

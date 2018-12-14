@@ -1,5 +1,6 @@
 from django.urls import path
 
+from base.views.inventario import UsarPocaoView, EquiparView
 from base.views.luta import ListarAdversariosView
 from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, SelecionarView, \
     PersonagemDeleteView, PesonagemDetailView, AddAtaque
@@ -22,5 +23,9 @@ urlpatterns = [
     path('alvos', ListarAdversariosView.as_view(), name='alvos'),
     path('quests', QuestListView.as_view(), name='quests'),
     path('quest<int:quest>', QuestView.as_view(), name='quest'),
+
+    # Usar Potions
+    path('pocao/<str:item>', UsarPocaoView.as_view(), name='pocao'),
+    path('equipar/<str:item>', EquiparView.as_view(), name='equipar'),
 
 ]
