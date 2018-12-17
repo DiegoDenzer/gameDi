@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import View
@@ -38,11 +40,19 @@ class UsarPocaoView(LoginRequiredMixin, View):
         if valida_jogador(request, personagem):
             personagem.refresh()
             item = InventarioItem.objects.get(id=item)
-            if item.pocao is None:
+            if item.pocao is not None:
                 personagem.hp += item.pocao.hp
-                personagem.energia += item.pocao.energia
+                personagem.energia_atual += item.pocao.energia
                 personagem.raiva_atual += item.pocao.raiva
                 item.delete()
+
+                if personagem.hp > personagem.vida * 10:
+                    personagem.hp = personagem.vida * 10
+                if personagem.energia_atual > personagem.energia:
+                    personagem.energia_atual = personagem.energia
+                if personagem.raiva_atual > personagem.raiva:
+                    personagem.raiva_atual = personagem.raiva
+
                 personagem.save()
             return redirect('personagem_detail')
 
@@ -58,32 +68,28 @@ class EquiparView(LoginRequiredMixin, View):
         if valida_jogador(request, personagem):
             personagem.refresh()
             item = InventarioItem.objects.get(pk=item)
-            if item.arma is None:
+            if item.arma is not None:
                 if personagem.armas is None:
                     personagem.armas = item.arma
                     item.delete()
                 else:
                     atual = personagem.armas
                     personagem.armas = item.arma
-                    guardar = InventarioItem()
-                    guardar.inventario = Inventario.objects.get(personagem=personagem)
-                    guardar.arma = atual
-                    guardar.save()
+                    InventarioItem.objects.create(id=uuid.uuid4(), arma=atual,
+                                                  inventario=Inventario.objects.get(personagem=personagem))
                     item.delete()
 
                 personagem.save()
 
-            elif item.armadura is None:
+            elif item.armadura is not None:
                 if personagem.armaduras is None:
                     personagem.armaduras = item.armadura
                     item.delete()
                 else:
                     atual = personagem.armaduras
                     personagem.armaduras = item.armadura
-                    guardar = InventarioItem()
-                    guardar.inventario = Inventario.objects.get(personagem=personagem)
-                    guardar.armadura = atual
-                    guardar.save()
+                    InventarioItem.objects.create(id=uuid.uuid4(), arma=atual,
+                                                  inventario=Inventario.objects.get(personagem=personagem))
                     item.delete()
 
                 personagem.save()

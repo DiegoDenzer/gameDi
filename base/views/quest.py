@@ -22,6 +22,7 @@ class QuestListView(View, LoginRequiredMixin):
 
 
 class QuestView(View, LoginRequiredMixin):
+    login_url = '/'
 
     def get(self, request, quest):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
@@ -34,7 +35,7 @@ class QuestView(View, LoginRequiredMixin):
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
 
             # adiciona experiencia ao jogador
-            jogador.experiencia = jogador.experiencia + quest.ganho_experiencia
+            jogador.experiencia = jogador.experiencia + (quest.ganho_experiencia * randint(1, 3))
 
             # verifica se subiu de nivel
             jogador.level_up()

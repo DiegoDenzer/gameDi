@@ -10,7 +10,11 @@
     <br>
     {% for quest in quests %}
 
-        Missão: {{ quest.nome }} - Nível:{{ quest.nivel }} - Energia: {{ quest.gasto_energia }} <a href="{% url 'quest' quest.pk %}">Fazer</a>
+        Missão: {{ quest.nome }} <br>
+        Nível:{{ quest.nivel }} - Energia: {{ quest.gasto_energia }}
+        Ganho Gold: {{ quest.ganho_gold }}/{% widthratio  quest.ganho_gold 1 5 %} -
+        Ganho Exp: {{ quest.ganho_experiencia}}/{% widthratio  quest.ganho_experiencia 1 3 %} <br>
+        <a href="{% url 'quest' quest.pk %}">Fazer</a>
 
     {% endfor %}
 

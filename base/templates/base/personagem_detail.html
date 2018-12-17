@@ -3,9 +3,9 @@
 {% block content %}
     Nome: {{ personagem.nome  }}<br>
     Nível: {{ personagem.nivel }}<br>
-    HP: {{ personagem.hp }} <br>
+    HP: {{ personagem.hp|floatformat:"0"  }} / {% widthratio  personagem.vida 1 10 %} <br>  <br>
     Raiva: {{ personagem.raiva_atual }} / {{ personagem.raiva }}<br>
-    Energia: {{ personagem.energia_atual }} / {{ personagem.energia }}<br>
+    Energia: {{ personagem.energia_atual|floatformat:"0" }} / {{ personagem.energia }}<br>
     Experiencia: {{ personagem.experiencia }}<br>
     Gold: {{ personagem.gold  }}
 
@@ -35,11 +35,11 @@
 
         {% if item.arma is not None %}
             {{ item }}
-            <a href="{% url 'equipar' item.pk %}">Usar</a> <br>
+            <a href="{% url 'equipar' item.pk %}">Equipar</a> <br>
         {% endif %}
 
         {% if item.armadura is not None %}
-            <a href="{% url 'equipar' item.pk %}">Usar</a> <br>
+            <a href="{% url 'equipar' item.pk %}">Equipar</a> <br>
         {% endif %}
 
         {% if item.itemDrop is not None %}

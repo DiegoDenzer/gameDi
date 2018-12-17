@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quests
+{% endblock %}
+
+{% block content %}
+
+    {% include 'base/dados_personagem.html' %}
+    <br>
+    Armas
+    <br>
+    {% for arma in armas %}
+        Nome: {{ arma.nome }} - Nv: {{ arma.nivel }} - valor: {{ arma.compra }}
+        <form method="post" action="{% url 'comprar_armadura' %}">
+            {% csrf_token %}
+            <input value="{{ arma.pk }}" name="arma" hidden="true">
+            {% if personagem.gold < arma.compra %}
+            <button type="submit">Comprar</button><br>
+            {% endif %}
+        </form>
+    {% endfor %}
+    <br>
+    Armaduras
+    <br>
+    {% for armadura in armaduras %}
+        <form method="post" action="{% url 'comprar_armadura' %}">
+         {% csrf_token %}
+        Nome: {{ armadura.nome }} - Nv: {{ armadura.nivel }} - valor: {{ armadura.compra }}
+          <input value="{{ armadura.pk }}" name="arma" hidden="true">
+            {% if personagem.gold < armadura.compra %}
+            <button type="submit">Comprar</button><br>
+            {% endif %}
+        </form>
+    {% endfor %}
+    Pocao
+    <br>
+    {% for pocao in pocoes %}
+        <form method="post" action="{% url 'comprar_pocao' %}">
+         {% csrf_token %}
+        Nome: {{ pocao.nome }}
+        <input value="{{ pocao.pk }}" name="arma" hidden="true">
+        {% if personagem.gold < pocao.compra %}
+            <button type="submit">Comprar</button><br>
+        {% endif %}
+        <br>
+    {% endfor %}
+
+{% endblock %}

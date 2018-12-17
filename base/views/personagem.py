@@ -1,12 +1,11 @@
+import uuid
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import logout_then_login
 
 # Create your views here.
 from django.views import View
-from django.views.generic import DetailView
-from pip._vendor import pkg_resources
-
 from base.forms import PersonagemForm
 from base.models import Personagem, Classe, Inventario, Pocao, InventarioItem
 from base.util.util import valida_jogador
@@ -16,13 +15,15 @@ def logout_view(request):
     del request.session['player_id']
     logout_then_login(request, '')
 
+
 class PersonagensListView(LoginRequiredMixin, View):
     login_url = '/'
     template = 'base/personagens.html'
 
     def get(self, request):
         jogadores = Personagem.objects.filter(user=request.user)
-        return render(request, self.template, {'personagens' : jogadores})
+        return render(request, self.template, {'personagens': jogadores})
+
 
 class PersonagemCreatedView(LoginRequiredMixin, View):
     login_url = '/'
@@ -60,14 +61,13 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
             p_raiva = Pocao.objects.get(pk=3)
 
 
-            # Cria os inventarios itens
-            item_1 = InventarioItem()
-            item_1.inventario = inv
-            item_1.pocao = p_hp
-            item_1.save()
+            InventarioItem.objects.bulk_create([
+                InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
+                InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
+                InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
+            )
 
-            InventarioItem.objects.create(pocao=p_energia, inventario=inv)
-            InventarioItem.objects.create(pocao=p_raiva, inventario=inv)
+
 
             return redirect('personagens')
 
@@ -75,6 +75,7 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
 class PersonagemDeleteView(LoginRequiredMixin, View):
     template = 'base/personagens.html'
     login_url = '/'
+
     def get(self, request, player):
         personagem_deletar = Personagem.objects.get(pk=player)
         if valida_jogador(request, personagem_deletar):
@@ -85,6 +86,7 @@ class PersonagemDeleteView(LoginRequiredMixin, View):
 class SelecionarView(LoginRequiredMixin, View):
     login_url = '/'
     template = 'base/cidade.html'
+
     def get(self, request):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, jogador):
@@ -110,12 +112,12 @@ class PesonagemDetailView(LoginRequiredMixin, View):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
             personagem.refresh()
-            inv = Inventario.objects.get(personagem=personagem)# Feito assim para ficar mais transparente pode não ser
-            itens = list(inv.itens.all()) # a melhor forma mas é mais e de facil entendimento
+            inv = Inventario.objects.get(personagem=personagem)  # Feito assim para ficar mais transparente pode não ser
+            itens = list(inv.itens.all())  # a melhor forma mas é mais e de facil entendimento
             return render(request, self.template, {'personagem': personagem, 'itens': itens})
 
 
-def distribuirAtributo(personagem, atributo):
+def distribuir_atributo(personagem, atributo):
     personagem.refresh()
     personagem.save()
     if personagem.pontos > 0:
@@ -126,7 +128,7 @@ def distribuirAtributo(personagem, atributo):
         elif atributo == 'vida':
             personagem.vida += 1
         elif atributo == 'energia':
-            personagem.raiva += 1
+            personagem.energia += 1
         elif atributo == 'raiva':
             personagem.raiva += 1
         personagem.pontos -= 1
@@ -135,41 +137,46 @@ def distribuirAtributo(personagem, atributo):
 
 class AddAtaque(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuirAtributo(personagem, 'ataque')
+            distribuir_atributo(personagem, 'ataque')
             return redirect('personagem_detail')
 
 
 class AddDefesa(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuirAtributo(personagem, 'defesa')
+            distribuir_atributo(personagem, 'defesa')
             return redirect('personagem_detail')
 
 class AddVida(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuirAtributo(personagem, 'vida')
+            distribuir_atributo(personagem, 'vida')
             return redirect('personagem_detail')
 
 class AddEnergia(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuirAtributo(personagem, 'energia')
+            distribuir_atributo(personagem, 'energia')
             return redirect('personagem_detail')
 
 class AddRaiva(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuirAtributo(personagem, 'raiva')
+            distribuir_atributo(personagem, 'raiva')
             return redirect('personagem_detail')

@@ -1,5 +1,6 @@
 import datetime
 import uuid
+from django_extensions.db.fields import AutoSlugField
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -30,9 +31,10 @@ class Classe(models.Model):
 class Arma(models.Model):
 
     poder = models.PositiveSmallIntegerField(default=1)
-    compra = models.FloatField(default=0)  # valor de compra
-    venda = models.FloatField(default=0)  # valor de venda
+    compra = models.PositiveIntegerField(default=0)  # valor de compra
+    venda = models.PositiveIntegerField(default=0)  # valor de venda
     update = models.PositiveSmallIntegerField(default=0)
+    nivel = models.PositiveIntegerField(default=0)
 
     imagem = models.ImageField(upload_to="armas")
 
@@ -56,11 +58,13 @@ class Arma(models.Model):
 class Armadura(models.Model):
 
     poder = models.PositiveIntegerField(default=1)
-    compra = models.FloatField(default=0)  # valor de compra
-    venda = models.FloatField(default=0)  # valor de venda
+    compra = models.PositiveIntegerField(default=0)  # valor de compra
+    venda = models.PositiveIntegerField(default=0)  # valor de venda
     update = models.PositiveSmallIntegerField(default=0)
 
     imagem = models.ImageField(upload_to="armas")
+
+    nivel = models.PositiveIntegerField(default=0)
 
     # nome do item
     nome = models.CharField(max_length=100)
@@ -221,10 +225,13 @@ class Personagem(models.Model):
 
 class Pocao(models.Model):
 
+    nivel = models.PositiveIntegerField(default=0)  # Nivel necessario
     nome = models.CharField(max_length=100)
     hp = models.PositiveIntegerField(default=0)
     energia = models.PositiveIntegerField(default=0)
     raiva = models.PositiveIntegerField(default=0)
+
+    compra = models.PositiveIntegerField(default=0)  # valor de compra
 
     class Meta:
         verbose_name = 'Poção'
@@ -277,10 +284,12 @@ class InventarioItem(models.Model):
 class Quest(models.Model):
     nivel = models.PositiveIntegerField(default=0)# Nivel necessario
     nome = models.CharField(max_length=100)
+    descricao = models.CharField(max_length=250)
+
     gasto_energia = models.PositiveIntegerField(default=0)# gasto de energia
+
     ganho_experiencia = models.PositiveIntegerField(default=0)# ganho de experiencia
     ganho_gold = models.PositiveIntegerField(default=0)# ganho de gold
-    descricao = models.CharField(max_length=250)
     itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True) # Material para craft
 
     class Meta:
