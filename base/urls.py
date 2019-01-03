@@ -2,7 +2,7 @@ from django.urls import path
 
 from base.views.inventario import UsarPocaoView, EquiparView
 from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView
-from base.views.luta import ListarAdversariosView
+from base.views.luta import ListarAdversariosView, AtacarView
 from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, SelecionarView, \
     PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddDefesa, AddVida, AddEnergia, AddRaiva
 from base.views.quest import QuestListView, QuestView
@@ -19,6 +19,8 @@ urlpatterns = [
     path('add_vida', AddVida.as_view(), name='add_vida'),
     path('add_energia', AddEnergia.as_view(), name='add_energia'),
     path('add_raiva', AddRaiva.as_view(), name='add_raiva'),
+
+    path('atacar/<int:alvo>', AtacarView.as_view(), name='atacar'),
 
     # Bases
     path('alvos', ListarAdversariosView.as_view(), name='alvos'),

@@ -8,7 +8,7 @@
 
     {% for alvo in alvos %}
 
-        {{ alvo.nome }}<br>
+        {{ alvo.nome }} - <a href="{% url 'atacar' alvo.pk %}" > Atacar</a><br>
 
     {% endfor %}
 

@@ -15,7 +15,7 @@
         <form method="post" action="{% url 'comprar_armadura' %}">
             {% csrf_token %}
             <input value="{{ arma.pk }}" name="arma" hidden="true">
-            {% if personagem.gold < arma.compra %}
+            {% if personagem.gold >= arma.compra %}
             <button type="submit">Comprar</button><br>
             {% endif %}
         </form>
@@ -28,7 +28,7 @@
          {% csrf_token %}
         Nome: {{ armadura.nome }} - Nv: {{ armadura.nivel }} - valor: {{ armadura.compra }}
           <input value="{{ armadura.pk }}" name="arma" hidden="true">
-            {% if personagem.gold < armadura.compra %}
+            {% if personagem.gold >= armadura.compra %}
             <button type="submit">Comprar</button><br>
             {% endif %}
         </form>
@@ -40,7 +40,7 @@
          {% csrf_token %}
         Nome: {{ pocao.nome }}
         <input value="{{ pocao.pk }}" name="arma" hidden="true">
-        {% if personagem.gold < pocao.compra %}
+        {% if personagem.gold >= pocao.compra %}
             <button type="submit">Comprar</button><br>
         {% endif %}
         <br>

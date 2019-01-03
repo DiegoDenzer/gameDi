@@ -34,7 +34,8 @@ class ComprarArmaView(LoginRequiredMixin, View):
             arma_id = request.POST['arma']
             arma = Arma.objects.get(pk=arma_id)
             if jogador.gold > arma.compra:
-                InventarioItem.objects.create(id=uuid.uuid4(), arma=arma, inventario=Inventario.objects.get(personagem=jogador)),
+                InventarioItem.objects.create(id=uuid.uuid4(), arma=arma,
+                                              inventario=Inventario.objects.get(personagem=jogador)),
                 return redirect('loja')
 
 
@@ -47,7 +48,8 @@ class ComprarArmaduraView(LoginRequiredMixin, View):
             armadura_id = request.POST['arma']
             armadura = Armadura.objects.get(pk=armadura_id)
             if jogador.gold >= armadura.compra:
-                InventarioItem.objects.create(id=uuid.uuid4(), armadura=armadura, inventario=Inventario.objects.get(personagem=jogador)),
+                InventarioItem.objects.create(id=uuid.uuid4(), armadura=armadura,
+                                              inventario=Inventario.objects.get(personagem=jogador)),
                 return redirect('loja')
 
 
@@ -60,5 +62,6 @@ class ComprarPocaoView(LoginRequiredMixin, View):
             pocao_id = request.POST['arma']
             pocao = Pocao.objects.get(pk=pocao_id)
             if jogador.gold >= pocao.compra:
-                InventarioItem.objects.create(id=uuid.uuid4(), pocao=pocao, inventario=Inventario.objects.get(personagem=jogador)),
+                InventarioItem.objects.create(id=uuid.uuid4(), pocao=pocao,
+                                              inventario=Inventario.objects.get(personagem=jogador)),
                 return redirect('loja')

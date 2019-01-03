@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from django_extensions.db.fields import AutoSlugField
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -36,7 +35,7 @@ class Arma(models.Model):
     update = models.PositiveSmallIntegerField(default=0)
     nivel = models.PositiveIntegerField(default=0)
 
-    imagem = models.ImageField(upload_to="armas")
+    imagem = models.ImageField(upload_to="armas", null=True, blank=True)
 
     # nome do item
     nome = models.CharField(max_length=100)
@@ -62,7 +61,7 @@ class Armadura(models.Model):
     venda = models.PositiveIntegerField(default=0)  # valor de venda
     update = models.PositiveSmallIntegerField(default=0)
 
-    imagem = models.ImageField(upload_to="armas")
+    imagem = models.ImageField(upload_to="armas", null=True, blank=True)
 
     nivel = models.PositiveIntegerField(default=0)
 
@@ -81,7 +80,6 @@ class Armadura(models.Model):
 
     def get_absolute_url(self):
         return reverse('armadura_detail', args=(self.pk,))
-
 
 
 class Personagem(models.Model):
@@ -241,8 +239,10 @@ class Pocao(models.Model):
     def __str__(self):
         return '{}'.format(self.nome)
 
+
 class MaterialCraft(models.Model):
     nome = models.CharField(max_length=100)
+
 
 class Inventario(models.Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
@@ -290,7 +290,7 @@ class Quest(models.Model):
 
     ganho_experiencia = models.PositiveIntegerField(default=0)# ganho de experiencia
     ganho_gold = models.PositiveIntegerField(default=0)# ganho de gold
-    itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True) # Material para craft
+    itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)# Material para craft
 
     class Meta:
         db_table = 'quest'
