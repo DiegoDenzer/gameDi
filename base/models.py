@@ -110,9 +110,8 @@ class Personagem(models.Model):
 
     # relacionamentos
     armas = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True)
-    armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE , null=True)
+    armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True)
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, null=True)
-
 
     # pontos ao subir de nivel
     pontos = models.PositiveSmallIntegerField(default=0)
@@ -155,7 +154,7 @@ class Personagem(models.Model):
     # funcao que recupera o player
     def refresh(self):
         # pega a hora atual
-     #   agora = datetime.datetime.now()
+        # agora = datetime.datetime.now()
         agora = timezone.now()
         # verifica se o usuario tem menos HP do que deveria
         if self.hp < self.vida * 10:
@@ -243,6 +242,13 @@ class Pocao(models.Model):
 class MaterialCraft(models.Model):
     nome = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name = 'Material Craft'
+        verbose_name_plural = 'Materiais Craft'
+        db_table = 'material_craft'
+
+    def __str__(self):
+        return '{}'.format(self.nome)
 
 class Inventario(models.Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)

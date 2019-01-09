@@ -7,6 +7,8 @@ from base.views.personagem import PersonagensListView, PersonagemCreatedView, lo
     PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddDefesa, AddVida, AddEnergia, AddRaiva
 from base.views.quest import QuestListView, QuestView
 
+
+
 urlpatterns = [
     path('', logout_view , name='logout'),
     path('personagens', PersonagensListView.as_view(), name='personagens'),

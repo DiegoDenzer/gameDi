@@ -1,10 +1,11 @@
+import uuid
 from random import randint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 
-from base.models import Personagem, Quest
+from base.models import Personagem, Quest, InventarioItem, Inventario
 from base.util.util import valida_jogador
 
 
@@ -36,6 +37,10 @@ class QuestView(View, LoginRequiredMixin):
 
             # adiciona experiencia ao jogador
             jogador.experiencia = jogador.experiencia + (quest.ganho_experiencia * randint(1, 3))
+
+            if quest.itemDrop is not None:
+                InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.itemDrop,
+                                              inventario=Inventario.objects.get(personagem=jogador)),
 
             # verifica se subiu de nivel
             jogador.level_up()
