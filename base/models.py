@@ -11,7 +11,6 @@ from django.urls import reverse
 
 
 class Classe(models.Model):
-
     nome = models.CharField(max_length=100)
     ataque = models.PositiveSmallIntegerField(default=0)
     defesa = models.PositiveSmallIntegerField(default=0)
@@ -28,7 +27,6 @@ class Classe(models.Model):
 
 
 class Arma(models.Model):
-
     poder = models.PositiveSmallIntegerField(default=1)
     compra = models.PositiveIntegerField(default=0)  # valor de compra
     venda = models.PositiveIntegerField(default=0)  # valor de venda
@@ -55,7 +53,6 @@ class Arma(models.Model):
 
 
 class Armadura(models.Model):
-
     poder = models.PositiveIntegerField(default=1)
     compra = models.PositiveIntegerField(default=0)  # valor de compra
     venda = models.PositiveIntegerField(default=0)  # valor de venda
@@ -83,7 +80,6 @@ class Armadura(models.Model):
 
 
 class Personagem(models.Model):
-
     nome = models.CharField(max_length=30)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -221,7 +217,6 @@ class Personagem(models.Model):
 
 
 class Pocao(models.Model):
-
     nivel = models.PositiveIntegerField(default=0)  # Nivel necessario
     nome = models.CharField(max_length=100)
     hp = models.PositiveIntegerField(default=0)
@@ -245,10 +240,10 @@ class MaterialCraft(models.Model):
     class Meta:
         verbose_name = 'Material Craft'
         verbose_name_plural = 'Materiais Craft'
-        db_table = 'material_craft'
 
     def __str__(self):
         return '{}'.format(self.nome)
+
 
 class Inventario(models.Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
@@ -288,18 +283,49 @@ class InventarioItem(models.Model):
 
 
 class Quest(models.Model):
-    nivel = models.PositiveIntegerField(default=0)# Nivel necessario
+    nivel = models.PositiveIntegerField(default=0)  # nível necessário
     nome = models.CharField(max_length=100)
     descricao = models.CharField(max_length=250)
 
-    gasto_energia = models.PositiveIntegerField(default=0)# gasto de energia
+    gasto_energia = models.PositiveIntegerField(default=0)  # gasto de energia
 
-    ganho_experiencia = models.PositiveIntegerField(default=0)# ganho de experiencia
-    ganho_gold = models.PositiveIntegerField(default=0)# ganho de gold
-    itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)# Material para craft
+    ganho_experiencia = models.PositiveIntegerField(default=0)  # ganho de experiencia
+    ganho_gold = models.PositiveIntegerField(default=0)  # ganho de gold
+    itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)  # Material para craft
 
     class Meta:
         db_table = 'quest'
+        ordering = ('-pk',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return self.nome
+
+
+class Receita(models.Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    level = models.PositiveIntegerField(default=1)
+    nome = models.CharField(max_length=100)
+    arma = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True, blank=True)
+    armadura = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True, blank=True)
+    pocao = models.ForeignKey(Pocao, on_delete=models.CASCADE, null=True, blank=True)
+
+    ingrediente_1 = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE,
+                                      null=True, blank=True, related_name='ingredietes1')
+    ingrediente_2 = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE,
+                                      null=True, blank=True, related_name='ingredietes2')
+    ingrediente_3 = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE,
+                                      null=True, blank=True, related_name='ingredietes3')
+    qtd_1 = models.PositiveIntegerField(default=1)
+    qtd_2 = models.PositiveIntegerField(default=1)
+    qtd_3 = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        verbose_name = 'Receita'
+        verbose_name_plural = 'Receitas'
+        db_table = 'receita'
         ordering = ('-pk',)
 
     def __unicode__(self):

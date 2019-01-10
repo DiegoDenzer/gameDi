@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Receitas
+{% endblock %}
+
+{% block content %}
+
+    {% include 'base/dados_personagem.html' %}
+    <br>
+
+    {% for receita in receitas %}
+        {{ receita.nome }}
+    {% endfor %}
+{% endblock %}

@@ -31,6 +31,7 @@ class UsarPocaoView(LoginRequiredMixin, View):
 
         return redirect('personagem_detail')
 
+
 class UsarPocaoView(LoginRequiredMixin, View):
     template = 'base/personagem_detail.html'
     login_url = '/'

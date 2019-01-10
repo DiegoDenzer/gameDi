@@ -64,3 +64,6 @@ class ComprarPocaoView(LoginRequiredMixin, View):
                 InventarioItem.objects.create(id=uuid.uuid4(), pocao=pocao,
                                               inventario=Inventario.objects.get(personagem=jogador)),
                 return redirect('loja')
+
+
+

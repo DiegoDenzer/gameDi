@@ -1,5 +1,6 @@
 from django.urls import path
 
+from base.views.forja import ForjaView, MostrarReceitasView
 from base.views.inventario import UsarPocaoView, EquiparView
 from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView
 from base.views.luta import ListarAdversariosView, AtacarView
@@ -38,4 +39,9 @@ urlpatterns = [
     path('comprar_arma', ComprarArmaView.as_view(), name='comprar_arma'),
     path('comprar_armadura', ComprarArmaView.as_view(), name='comprar_armadura'),
     path('comprar_pocao', ComprarPocaoView.as_view(), name='comprar_pocao'),
+
+    # Forja
+    path('forja', ForjaView.as_view(), name='forja'),
+    path('criar_item', MostrarReceitasView.as_view(), name='receitas'),
+
 ]
