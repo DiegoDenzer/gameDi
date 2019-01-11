@@ -15,8 +15,7 @@ class ListarAdversariosView(LoginRequiredMixin, View):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
 
         if valida_jogador(request, jogador):
-            alvos = Personagem.objects.all()
-            '''
+
             alvos = Personagem.objects.filter(
                 experiencia__gte=(jogador.experiencia * 0.6)
             ).filter(
@@ -26,8 +25,11 @@ class ListarAdversariosView(LoginRequiredMixin, View):
             ).exclude(
                 experiencia=0
             ).exclude(
-                hp=0
-            )[:10]'''
+                hp__lte=0
+            )[:10]
+
+            for alvo in alvos:
+                alvo.refresh()
 
             return render(request, 'base/alvos.html', {'personagem': jogador, 'alvos': alvos})
 
@@ -49,7 +51,7 @@ class AtacarView(LoginRequiredMixin, View):
             return redirect('alvos')
 
         # verifica se a experiencia do alvo eh menor que 50% da experiencia do atacante
-        if jogador.experiencia * 0.5 > alvo.experiencia:
+        if jogador.experiencia * 0.6 > alvo.experiencia:
             return redirect('alvos')
 
         # atualiza o alvo e o jogador
@@ -113,7 +115,7 @@ class AtacarView(LoginRequiredMixin, View):
 
             if dano > 0:
                 alvo.hp = alvo.hp - dano
-                dano_personagem.append(dano)
+                dano_personagem.append('{} {}'.format(jogador.nome, dano))
             else:
                 dano_personagem.append(0)
 
@@ -126,18 +128,18 @@ class AtacarView(LoginRequiredMixin, View):
 
             if dano > 0:
                 jogador.hp = jogador.hp - dano
-                dano_alvo.append(dano)
+                dano_alvo.append('{} {}'.format(alvo.nome, dano))
             else:
                 dano_alvo.append(0)
 
             # verifica se alguem morreu no combate
-            if jogador.hp == 0 or alvo.hp == 0:
+            if jogador.hp <= 0 or alvo.hp <= 0:
                 break
 
         # descobrindo quem perdeu
-        if jogador.hp == 0:
+        if jogador.hp <= 0:
             vitoria = False
-        elif alvo.hp == 0:
+        elif alvo.hp <= 0:
             vitoria = True
         elif alvo_hp - alvo.hp > jogador_hp - jogador.hp:
             vitoria = True
@@ -171,14 +173,17 @@ class AtacarView(LoginRequiredMixin, View):
         alvo.level_up()
         jogador.level_up()
 
+        if jogador.hp <= 0:
+            jogador.hp = 1
+        elif alvo.hp <= 0:
+            alvo.hp = 1
         # salva todas as alteracoes no banco de dados
         alvo.save()
         jogador.save()
 
         # exibe o template com o resultado da luta
         return render(request, "base/resultado_luta.html", {"personagem": jogador,
-                                                  "alvo": alvo,
-                                                  "vitoria": vitoria,
-                                                  "dados_p": dano_personagem,
-                                                  "dados_a": dano_alvo
-                                                            })
+                                                            "alvo": alvo,
+                                                            "vitoria": vitoria,
+                                                            "dados_p": dano_personagem,
+                                                            "dados_a": dano_alvo })
