@@ -10,6 +10,7 @@
     <br>
     Armas
     <br>
+
     {% for arma in armas %}
         Nome: {{ arma.nome }} - Nv: {{ arma.nivel }} - valor: {{ arma.compra }}
         <form method="post" action="{% url 'comprar_armadura' %}">

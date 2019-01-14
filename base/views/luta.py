@@ -10,6 +10,7 @@ from base.util.util import valida_jogador
 
 class ListarAdversariosView(LoginRequiredMixin, View):
     login_url = '/'
+
     def get(self, request):
 
         jogador = Personagem.objects.get(pk=request.session['player_id'])
@@ -44,7 +45,7 @@ class AtacarView(LoginRequiredMixin, View):
         alvo = get_object_or_404(Personagem, pk=alvo_id)
 
         # pega o nosso jogador da sessao
-        jogador =get_object_or_404(Personagem, pk= request.session['player_id'])
+        jogador = get_object_or_404(Personagem, pk=request.session['player_id'])
 
         # verifica se o jogador e o alvo sao a mesma pessoa
         if jogador == alvo:
@@ -105,8 +106,18 @@ class AtacarView(LoginRequiredMixin, View):
         # a luta dura 5 turnos
         for turno in [1, 2, 3, 4, 5]:
 
-            # primeiro o jogador ataca
+            dex = randint(0, 21)
 
+            if dex < 6:
+                dano = 0
+
+            if dex >= 6 or dex <= 17:
+                pass
+            
+            if dex >= 18 or dex >= 20:
+                pass
+            
+            # primeiro o jogador ataca
             ataque = randint(int(jogador.ataque / 3), jogador.ataque)
             defesa = randint(int(alvo.defesa / 3), alvo.defesa)
 
@@ -186,4 +197,4 @@ class AtacarView(LoginRequiredMixin, View):
                                                             "alvo": alvo,
                                                             "vitoria": vitoria,
                                                             "dados_p": dano_personagem,
-                                                            "dados_a": dano_alvo })
+                                                            "dados_a": dano_alvo})

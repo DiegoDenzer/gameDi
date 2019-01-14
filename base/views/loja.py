@@ -18,7 +18,7 @@ class LojaListView(LoginRequiredMixin, View):
                 'armas': Arma.objects.all().order_by('nivel'),
                 'armaduras': Armadura.objects.all().order_by('nivel'),
                 'pocoes': Pocao.objects.all().order_by('nivel'),
-                'personagem':jogador
+                'personagem': jogador
             }
 
             return render(request, 'base/loja.html', dados)
