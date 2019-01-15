@@ -89,6 +89,8 @@ class Personagem(models.Model):
 
     ataque = models.PositiveSmallIntegerField(default=10)
     defesa = models.PositiveSmallIntegerField(default=10)
+    destreza = models.PositiveSmallIntegerField(default=10)
+
     vida = models.PositiveSmallIntegerField(default=10)
 
     energia = models.PositiveSmallIntegerField(default=20)  # energia para fazer quests

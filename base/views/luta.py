@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
 from base.models import Personagem
-from base.util.util import valida_jogador
+from base.util.util import valida_jogador, rolar_dado
 
 
 class ListarAdversariosView(LoginRequiredMixin, View):
@@ -33,6 +33,9 @@ class ListarAdversariosView(LoginRequiredMixin, View):
                 alvo.refresh()
 
             return render(request, 'base/alvos.html', {'personagem': jogador, 'alvos': alvos})
+
+
+
 
 
 class AtacarView(LoginRequiredMixin, View):
@@ -99,53 +102,104 @@ class AtacarView(LoginRequiredMixin, View):
         else:
             alvo_armadura = 1
 
-        dano_personagem = []
-        dano_alvo = []
+        dano_personagem = {}
+        dano_alvo = {}
+
+        primeiro_ataque = True
+
+        if jogador.destreza < alvo.destreza:
+            primeiro_ataque = False
 
         # agora o bicho vai pegar!
-        # a luta dura 5 turnos
+        # a luta dura 5 turnos ou alguém perder o hp = 0
         for turno in [1, 2, 3, 4, 5]:
 
-            dex = randint(0, 21)
+            if primeiro_ataque:
+                dado = rolar_dado()
+                if dado != 'Erro':
+                    # primeiro o jogador ataca
+                    ataque = randint(int(jogador.ataque / 2), jogador.ataque)
+                    defesa = randint(int(alvo.defesa / 2), alvo.defesa)
 
-            if dex < 6:
-                dano = 0
+                    # calcula o dano
+                    if dado == 'Normal':
+                        dano = (ataque + jogador_arma) - (defesa + alvo_armadura)
+                    else:
+                        dano = ((ataque + jogador_arma) * 2) - (defesa + alvo_armadura)
 
-            if dex >= 6 or dex <= 17:
-                pass
-            
-            if dex >= 18 or dex >= 20:
-                pass
-            
-            # primeiro o jogador ataca
-            ataque = randint(int(jogador.ataque / 3), jogador.ataque)
-            defesa = randint(int(alvo.defesa / 3), alvo.defesa)
+                    if dano > 0:
+                        alvo.hp = alvo.hp - dano
+                        dano_personagem[turno] = '{} {}'.format(jogador.nome, dano)
+                    else:
+                        dano_personagem[turno] = 'Sem efeito {} {}'.format(jogador.nome, dano)
+                else:
+                    dano_personagem[turno] = 'Erro'
 
-            # calcula o dano
-            dano = ataque * jogador_arma - defesa * alvo_armadura
+                dado = rolar_dado()
+                if dado != 'Erro':
+                    # agora o alvo ataca
+                    ataque = randint(int(alvo.ataque / 2), alvo.ataque)
+                    defesa = randint(int(jogador.defesa / 2), jogador.defesa)
 
-            if dano > 0:
-                alvo.hp = alvo.hp - dano
-                dano_personagem.append('{} {}'.format(jogador.nome, dano))
+                    # calcula o dano
+                    if dado == 'Normal':
+                        dano = (ataque + alvo_arma) - (defesa + jogador_armadura)
+                    else:
+                        dano = ((ataque + alvo_arma) * 2) - (defesa + jogador_armadura)
+
+                    if dano > 0:
+                        jogador.hp = jogador.hp - dano
+                        dano_alvo[turno] = '{} {}'.format(alvo.nome, dano)
+                    else:
+                        dano_alvo[turno] = 'Sem efeito {} {}'.format(alvo.nome, dano)
+                else:
+                    dano_alvo[turno] = 'Erro'
+
+
             else:
-                dano_personagem.append(0)
+                dado = rolar_dado()
+                if dado != 'Erro':
+                    # agora o alvo ataca
+                    ataque = randint(int(alvo.ataque / 2), alvo.ataque)
+                    defesa = randint(int(jogador.defesa / 2), jogador.defesa)
 
-            # agora o alvo ataca
-            ataque = randint(int(alvo.ataque / 3), alvo.ataque)
-            defesa = randint(int(jogador.defesa / 3), jogador.defesa)
+                    # calcula o dano
+                    if dado == 'Normal':
+                        dano = (ataque + alvo_arma) - (defesa + jogador_armadura)
+                    else:
+                        dano = ((ataque + alvo_arma) * 2) - (defesa + jogador_armadura)
 
-            # calcula o dano
-            dano = ataque * alvo_arma - defesa * jogador_armadura
+                    if dano > 0:
+                        jogador.hp = jogador.hp - dano
+                        dano_alvo[turno] = '{} {}'.format(alvo.nome, dano)
+                    else:
+                        dano_alvo[turno] = 'Sem efeito {} {}'.format(alvo.nome, dano)
+                else:
+                    dano_alvo[turno] = 'Erro'
 
-            if dano > 0:
-                jogador.hp = jogador.hp - dano
-                dano_alvo.append('{} {}'.format(alvo.nome, dano))
-            else:
-                dano_alvo.append(0)
+                dado = rolar_dado()
+                if dado != 'Erro':
+                    # primeiro o jogador ataca
+                    ataque = randint(int(jogador.ataque / 2), jogador.ataque)
+                    defesa = randint(int(alvo.defesa / 2), alvo.defesa)
+
+                    # calcula o dano
+                    if dado == 'Normal':
+                        dano = (ataque + jogador_arma) - (defesa + alvo_armadura)
+                    else:
+                        dano = ((ataque + jogador_arma) * 2) - (defesa + alvo_armadura)
+
+                    if dano > 0:
+                        alvo.hp = alvo.hp - dano
+                        dano_personagem[turno] = '{} {}'.format(jogador.nome, dano)
+                    else:
+                        dano_personagem[turno] = 'Sem efeito {} {}'.format(jogador.nome, dano)
+                else:
+                    dano_personagem[turno] = 'Erro'
 
             # verifica se alguem morreu no combate
             if jogador.hp <= 0 or alvo.hp <= 0:
-                break
+                    break
 
         # descobrindo quem perdeu
         if jogador.hp <= 0:

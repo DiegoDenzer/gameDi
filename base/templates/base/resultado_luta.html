@@ -9,7 +9,21 @@
     {% include 'base/dados_personagem.html' %}
 
     <br>
-    {{ vitoria }}<br>
-    {{ dados_p }}<br>
-    {{ dados_a }}
+    {{ vitoria }}
+
+    <br>
+
+    <ul>
+    {% for key, value in dados_p.items %}
+        <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+    </ul>
+
+    <br>
+    <ul>
+    {% for key, value in dados_a.items %}
+        <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+    </ul>
+
 {% endblock %}
