@@ -35,9 +35,6 @@ class ListarAdversariosView(LoginRequiredMixin, View):
             return render(request, 'base/alvos.html', {'personagem': jogador, 'alvos': alvos})
 
 
-
-
-
 class AtacarView(LoginRequiredMixin, View):
     login_url = '/'
 
@@ -115,7 +112,7 @@ class AtacarView(LoginRequiredMixin, View):
         for turno in [1, 2, 3, 4, 5]:
 
             if primeiro_ataque:
-                dado = rolar_dado()
+                dado = rolar_dado(jogador.destreza)
                 if dado != 'Erro':
                     # primeiro o jogador ataca
                     ataque = randint(int(jogador.ataque / 2), jogador.ataque)
@@ -248,6 +245,7 @@ class AtacarView(LoginRequiredMixin, View):
 
         # exibe o template com o resultado da luta
         return render(request, "base/resultado_luta.html", {"personagem": jogador,
+                                                            "gold": grana,
                                                             "alvo": alvo,
                                                             "vitoria": vitoria,
                                                             "dados_p": dano_personagem,

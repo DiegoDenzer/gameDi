@@ -2,7 +2,7 @@
     <legend>Dados Personagem</legend>
     <a href="{% url 'personagem_detail' %}">Detalhes Personagem</a><br>
     Nome: {{ personagem.nome  }}<br>
-    Nível: {{ personagem.nivel }}<br>
+    Nível: {{ personagem.nivel }} / Classe: {{ personagem.classe }}<br>
     Raiva: {{ personagem.raiva_atual }} / {{ personagem.raiva }}<br>
     Energia: {{ personagem.energia_atual }} / {{ personagem.energia }}<br>
     Experiencia: {{ personagem.experiencia }}<br>

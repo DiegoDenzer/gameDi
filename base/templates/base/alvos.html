@@ -8,8 +8,8 @@
 
     {% for alvo in alvos %}
 
-        {{ alvo.nome }} - <a href="{% url 'atacar' alvo.pk %}" > Atacar</a><br>
+        {{ alvo.nome }} - classe:{{ alvo.classe }} - lvl: {{ alvo.nivel }} <a href="{% url 'atacar' alvo.pk %}" > Atacar</a><br>
 
     {% endfor %}
-
+    
 {% endblock %}

@@ -8,12 +8,15 @@ def valida_jogador(request, jogador):
         return False
 
 
-def rolar_dado():
+def rolar_dado(destreza):
     dado_ataque = randint(0, 21)
-    if dado_ataque < 6:
+
+    chance = destreza // 20
+
+    if dado_ataque < 6 - chance:
         return 'Erro'
 
-    if dado_ataque >= 6 or dado_ataque <= 17:
+    if dado_ataque >= 6 - chance or dado_ataque <= 17:
         return 'Normal'
 
     if dado_ataque >= 18 or dado_ataque >= 20:

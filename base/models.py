@@ -11,9 +11,12 @@ from django.urls import reverse
 
 
 class Classe(models.Model):
+
     nome = models.CharField(max_length=100)
     ataque = models.PositiveSmallIntegerField(default=0)
     defesa = models.PositiveSmallIntegerField(default=0)
+    destreza = models.PositiveSmallIntegerField(default=0)
+    vida = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         db_table = 'classe'
@@ -23,7 +26,7 @@ class Classe(models.Model):
         return u'%s' % self.pk
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome}"
 
 
 class Arma(models.Model):

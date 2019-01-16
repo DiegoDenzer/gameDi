@@ -9,8 +9,14 @@
     {% include 'base/dados_personagem.html' %}
 
     <br>
-    {{ vitoria }}
 
+    {% if vitoria %}
+        Vitória
+        {% else %}
+        Derrota
+    {% endif %}
+
+    {{ vitoria }}
     <br>
 
     <ul>

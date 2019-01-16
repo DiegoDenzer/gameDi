@@ -46,7 +46,9 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
             classe = get_object_or_404(Classe, pk=form.cleaned_data['classe'].pk)
             player.ataque += player.ataque + classe.ataque
             player.defesa += player.defesa + classe.defesa
-
+            player.destreza += player.destreza + classe.destreza
+            player.vida += player.vida + classe.vida
+            player.hp = player.vida * 10
             player.save()
 
             # Cria Invetario para o personagem
@@ -60,14 +62,11 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
             p_energia = Pocao.objects.get(pk=2)
             p_raiva = Pocao.objects.get(pk=3)
 
-
             InventarioItem.objects.bulk_create([
                 InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
             )
-
-
 
             return redirect('personagens')
 
@@ -154,6 +153,7 @@ class AddDefesa(LoginRequiredMixin, View):
             distribuir_atributo(personagem, 'defesa')
             return redirect('personagem_detail')
 
+
 class AddVida(LoginRequiredMixin, View):
     login_url = '/'
 
@@ -163,6 +163,7 @@ class AddVida(LoginRequiredMixin, View):
             distribuir_atributo(personagem, 'vida')
             return redirect('personagem_detail')
 
+
 class AddEnergia(LoginRequiredMixin, View):
     login_url = '/'
 
@@ -171,6 +172,7 @@ class AddEnergia(LoginRequiredMixin, View):
         if valida_jogador(request, personagem):
             distribuir_atributo(personagem, 'energia')
             return redirect('personagem_detail')
+
 
 class AddRaiva(LoginRequiredMixin, View):
     login_url = '/'

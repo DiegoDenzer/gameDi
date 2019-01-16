@@ -7,4 +7,4 @@ class PersonagemForm(forms.ModelForm):
 
     class Meta:
         model = Personagem
-        fields = ['nome','classe']
+        fields = ['nome', 'classe']
