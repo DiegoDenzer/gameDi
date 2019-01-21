@@ -7,8 +7,8 @@ def valida_jogador(request, jogador):
     else:
         return False
 
-
 def rolar_dado(destreza):
+
     dado_ataque = randint(0, 21)
 
     chance = destreza // 20

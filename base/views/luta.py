@@ -114,15 +114,18 @@ class AtacarView(LoginRequiredMixin, View):
             if primeiro_ataque:
                 dado = rolar_dado(jogador.destreza)
                 if dado != 'Erro':
+
+                    # a.atk / (1 + b.def /100)
+
                     # primeiro o jogador ataca
-                    ataque = randint(int(jogador.ataque / 2), jogador.ataque)
-                    defesa = randint(int(alvo.defesa / 2), alvo.defesa)
+                    ataque = jogador.ataque + jogador_arma
+                    defesa = alvo.defesa + alvo_armadura
 
                     # calcula o dano
                     if dado == 'Normal':
-                        dano = (ataque + jogador_arma) - (defesa + alvo_armadura)
+                        dano = ataque / (1 + defesa / 100)
                     else:
-                        dano = ((ataque + jogador_arma) * 2) - (defesa + alvo_armadura)
+                        dano = (ataque / (1 + defesa / 100)) * 2
 
                     if dano > 0:
                         alvo.hp = alvo.hp - dano
@@ -132,17 +135,17 @@ class AtacarView(LoginRequiredMixin, View):
                 else:
                     dano_personagem[turno] = 'Erro'
 
-                dado = rolar_dado()
+                dado = rolar_dado(alvo.destreza)
                 if dado != 'Erro':
                     # agora o alvo ataca
-                    ataque = randint(int(alvo.ataque / 2), alvo.ataque)
-                    defesa = randint(int(jogador.defesa / 2), jogador.defesa)
+                    ataque = alvo.ataque + alvo_arma
+                    defesa = jogador.defesa + jogador_armadura
 
                     # calcula o dano
                     if dado == 'Normal':
-                        dano = (ataque + alvo_arma) - (defesa + jogador_armadura)
+                        dano = ataque / (1 + defesa / 100)
                     else:
-                        dano = ((ataque + alvo_arma) * 2) - (defesa + jogador_armadura)
+                        dano = (ataque / (1 + defesa / 100)) * 2
 
                     if dano > 0:
                         jogador.hp = jogador.hp - dano
@@ -154,17 +157,17 @@ class AtacarView(LoginRequiredMixin, View):
 
 
             else:
-                dado = rolar_dado()
+                dado = rolar_dado(alvo.destreza)
                 if dado != 'Erro':
                     # agora o alvo ataca
-                    ataque = randint(int(alvo.ataque / 2), alvo.ataque)
-                    defesa = randint(int(jogador.defesa / 2), jogador.defesa)
+                    ataque = alvo.ataque + alvo_arma
+                    defesa = jogador.defesa + jogador_armadura
 
                     # calcula o dano
                     if dado == 'Normal':
-                        dano = (ataque + alvo_arma) - (defesa + jogador_armadura)
+                        dano = ataque / (1 + defesa / 100)
                     else:
-                        dano = ((ataque + alvo_arma) * 2) - (defesa + jogador_armadura)
+                        dano = (ataque / (1 + defesa / 100)) * 2
 
                     if dano > 0:
                         jogador.hp = jogador.hp - dano
@@ -174,17 +177,16 @@ class AtacarView(LoginRequiredMixin, View):
                 else:
                     dano_alvo[turno] = 'Erro'
 
-                dado = rolar_dado()
+                dado = rolar_dado(jogador.destreza)
                 if dado != 'Erro':
                     # primeiro o jogador ataca
-                    ataque = randint(int(jogador.ataque / 2), jogador.ataque)
-                    defesa = randint(int(alvo.defesa / 2), alvo.defesa)
-
+                    ataque = jogador.ataque + jogador_arma
+                    defesa = alvo.defesa + alvo_armadura
                     # calcula o dano
                     if dado == 'Normal':
-                        dano = (ataque + jogador_arma) - (defesa + alvo_armadura)
+                        dano = ataque / (1 + defesa / 100)
                     else:
-                        dano = ((ataque + jogador_arma) * 2) - (defesa + alvo_armadura)
+                        dano = (ataque / (1 + defesa / 100)) * 2
 
                     if dano > 0:
                         alvo.hp = alvo.hp - dano
