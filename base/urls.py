@@ -1,16 +1,19 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 
 from base.views.forja import ForjaView, MostrarReceitasView
 from base.views.inventario import UsarPocaoView, EquiparView
 from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView
 from base.views.luta import ListarAdversariosView, AtacarView
 from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, SelecionarView, \
-    PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddDefesa, AddVida, AddEnergia, AddRaiva
+    PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddDefesa, AddVida, AddEnergia, AddRaiva, ClasseViewSet
 from base.views.quest import QuestListView, QuestView
 
-
+router = routers.DefaultRouter()
+router.register(r'classes', ClasseViewSet)
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('', logout_view , name='logout'),
     path('personagens', PersonagensListView.as_view(), name='personagens'),
     path('novo_personagem', PersonagemCreatedView.as_view(), name='novo_personagem'),

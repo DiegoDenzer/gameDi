@@ -6,8 +6,11 @@ from django.contrib.auth.views import logout_then_login
 
 # Create your views here.
 from django.views import View
+from rest_framework import viewsets
+
 from base.forms import PersonagemForm
 from base.models import Personagem, Classe, Inventario, Pocao, InventarioItem
+from base.serializers import ClasseSerializer
 from base.util.util import valida_jogador
 
 
@@ -182,3 +185,11 @@ class AddRaiva(LoginRequiredMixin, View):
         if valida_jogador(request, personagem):
             distribuir_atributo(personagem, 'raiva')
             return redirect('personagem_detail')
+
+
+class ClasseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Classe.objects.all()
+    serializer_class = ClasseSerializer
