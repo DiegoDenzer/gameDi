@@ -13,13 +13,14 @@ class QuestListView(View, LoginRequiredMixin):
     login_url = '/'
 
     def get(self, request):
+        # Obter Jogador
         jogador = Personagem.objects.get(pk=request.session['player_id'])
+        # Valida se o Jogador e Valido
         if valida_jogador(request, jogador):
             jogador.refresh()
             jogador.save()
-
-            return render(request, 'base/quests.html', {'personagem': jogador, 'quests': Quest.objects.all() } )
-
+            # Retorna as Quests
+            return render(request, 'base/quest/quests.html', {'personagem': jogador, 'quests': Quest.objects.all()})
 
 
 class QuestView(View, LoginRequiredMixin):
@@ -27,6 +28,7 @@ class QuestView(View, LoginRequiredMixin):
 
     def get(self, request, quest):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
+
         if valida_jogador(request, jogador):
             quest = Quest.objects.get(pk=quest)
             if jogador.energia_atual < quest.gasto_energia:
@@ -44,7 +46,6 @@ class QuestView(View, LoginRequiredMixin):
 
             # verifica se subiu de nivel
             jogador.level_up()
-
             jogador.save()
 
             return redirect('quests')

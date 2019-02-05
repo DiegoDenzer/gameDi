@@ -32,7 +32,7 @@ class ListarAdversariosView(LoginRequiredMixin, View):
             for alvo in alvos:
                 alvo.refresh()
 
-            return render(request, 'base/alvos.html', {'personagem': jogador, 'alvos': alvos})
+            return render(request, 'base/pvp/alvos.html', {'personagem': jogador, 'alvos': alvos})
 
 
 class AtacarView(LoginRequiredMixin, View):
@@ -246,7 +246,7 @@ class AtacarView(LoginRequiredMixin, View):
         jogador.save()
 
         # exibe o template com o resultado da luta
-        return render(request, "base/resultado_luta.html", {"personagem": jogador,
+        return render(request, "base/pvp/resultado_luta.html", {"personagem": jogador,
                                                             "gold": grana,
                                                             "alvo": alvo,
                                                             "vitoria": vitoria,
