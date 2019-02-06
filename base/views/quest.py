@@ -5,7 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 
-from base.models import Personagem, Quest, InventarioItem, Inventario
+from base.models.inventario import InventarioItem, Inventario
+from base.models.personagem import Personagem
+from base.models.quest import Quest
 from base.util.util import valida_jogador
 
 

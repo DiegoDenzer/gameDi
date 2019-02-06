@@ -1,25 +1,37 @@
 Atributos:
-    ataque -> determina o dano.
-    defesa -> determina resistência ao dano.
-    destreza -> velocidade.
-    vida -> Total de HitPoints vida *10.
-    energia -> para fazer quest e outras possíveis coisas.
-    raiva  -> atacar outros players.
 
-Atualização:
-    Hp -> a cada 2 minutos
-    energia -> a cada 1 minuto.
-    Raiva -> a cada 5 minutos.
 
-Pontos:
-    A cada level o jogador ganha 5 pontos para distribuir.
-    A cada 20 pontos em destreza a chance de acerto aumenta em 1.
-Luta:
+EXEMPLOS LVL 1.
+----------------------------------------
+    LEVEL 1 GUERREIRO
+    1-8      (Dano)      +
+    25 Hp    (PF)
 
-    5 turnos ou alguem ficar com hp = 0.
-    Jogador com maior destreza ataca primeiro.
+    9 - Indice Ataque                              5 + 9 = 14
+    16 - Indice Defesa
 
-    rand entre 0 - 20
-    0  - 5  = Miss
-    6  - 17 = Acerto
-    18 - 20 = Critico
+    4 - AM
+    11 - DM
+
+----------------------------------------//
+    LEVEL 1 LADRAO
+    1-8      (Dano)
+    21 Hp(PF)
+
+    9 -  Indice Ataque                            7 + 9 = 14
+    14 - Indice Defesa                            14
+
+    4 - Ataque Magico
+    12 - Defesa Magica
+
+----------------------------------------------
+    LEVEL 1 MAGO ARCANO
+
+    1-4      (Dano)
+    18       Hp(PF)
+
+    6  - Indice Ataque                            4 + 8 = 11
+    14 - Indice Defesa                            14
+
+    8  - Ataque Magico usar sempre o magico
+    17 - Defesa Magica

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from base.models import Classe
+from base.models.classe import Classe
 
 
 class ClasseSerializer(serializers.HyperlinkedModelSerializer):

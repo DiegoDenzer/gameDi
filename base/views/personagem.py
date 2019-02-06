@@ -9,7 +9,10 @@ from django.views import View
 from rest_framework import viewsets
 
 from base.forms import PersonagemForm
-from base.models import Personagem, Classe, Inventario, Pocao, InventarioItem
+from base.models.classe import Classe
+from base.models.inventario import Inventario, InventarioItem
+from base.models.personagem import Personagem
+from base.models.pocao import Pocao
 from base.serializers import ClasseSerializer
 from base.util.util import valida_jogador
 
@@ -21,7 +24,7 @@ def logout_view(request):
 
 class PersonagensListView(LoginRequiredMixin, View):
     login_url = '/'
-    template = 'base/personagens.html'
+    template = 'base/personagem/personagens.html'
 
     def get(self, request):
         jogadores = Personagem.objects.filter(user=request.user)
@@ -30,7 +33,7 @@ class PersonagensListView(LoginRequiredMixin, View):
 
 class PersonagemCreatedView(LoginRequiredMixin, View):
     login_url = '/'
-    template = 'base/novo_personagem.html'
+    template = 'base/personagem/novo_personagem.html'
 
     def get(self, request):
         form = PersonagemForm()
@@ -75,7 +78,7 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
 
 
 class PersonagemDeleteView(LoginRequiredMixin, View):
-    template = 'base/personagens.html'
+    template = 'base/personagem/personagens.html'
     login_url = '/'
 
     def get(self, request, player):
@@ -108,7 +111,7 @@ class SelecionarView(LoginRequiredMixin, View):
 
 class PesonagemDetailView(LoginRequiredMixin, View):
 
-    template = 'base/personagem_detail.html'
+    template = 'base/personagem/personagem_detail.html'
 
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])

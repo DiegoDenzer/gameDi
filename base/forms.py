@@ -1,6 +1,6 @@
 from django import forms
 
-from base.models import Personagem
+from base.models.personagem import Personagem
 
 
 class PersonagemForm(forms.ModelForm):

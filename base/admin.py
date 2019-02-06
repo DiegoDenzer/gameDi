@@ -1,7 +1,15 @@
 from django.contrib import admin
 
 # Register your models here.
-from base.models import Classe, Arma, Armadura, Personagem, Inventario, Pocao, Quest, Receita
+from base.models import arma, personagem
+from base.models.arma import Arma
+from base.models.armadura import Armadura
+from base.models.classe import Classe
+from base.models.inventario import Inventario
+from base.models.itens import Receita
+from base.models.personagem import Personagem
+from base.models.pocao import Pocao
+from base.models.quest import Quest
 
 
 class ClasseAdmin(admin.ModelAdmin):

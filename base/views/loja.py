@@ -2,7 +2,12 @@ import uuid
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from base.models import Personagem, Arma, Armadura, InventarioItem, Inventario, Pocao
+
+from base.models.arma import Arma
+from base.models.armadura import Armadura
+from base.models.inventario import InventarioItem, Inventario
+from base.models.personagem import Personagem
+from base.models.pocao import Pocao
 from base.util.util import valida_jogador
 
 

@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
-from base.models import Personagem
+from base.models import personagem
 from base.util.util import valida_jogador, rolar_dado
 
 
@@ -13,11 +13,11 @@ class ListarAdversariosView(LoginRequiredMixin, View):
 
     def get(self, request):
 
-        jogador = Personagem.objects.get(pk=request.session['player_id'])
+        jogador = personagem.objects.get(pk=request.session['player_id'])
 
         if valida_jogador(request, jogador):
 
-            alvos = Personagem.objects.filter(
+            alvos = personagem.objects.filter(
                 experiencia__gte=(jogador.experiencia * 0.6)
             ).filter(
                 experiencia__lte=(jogador.experiencia * 1.4)
@@ -42,10 +42,10 @@ class AtacarView(LoginRequiredMixin, View):
         # view da luta
         alvo_id = alvo
         # verifica se esta sendo passado um alvo valido
-        alvo = get_object_or_404(Personagem, pk=alvo_id)
+        alvo = get_object_or_404(personagem, pk=alvo_id)
 
         # pega o nosso jogador da sessao
-        jogador = get_object_or_404(Personagem, pk=request.session['player_id'])
+        jogador = get_object_or_404(personagem, pk=request.session['player_id'])
 
         # verifica se o jogador e o alvo sao a mesma pessoa
         if jogador == alvo:
