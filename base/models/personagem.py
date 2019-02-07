@@ -11,22 +11,34 @@ from base.models.classe import Classe
 class Personagem(models.Model):
 
     nome = models.CharField(max_length=30)
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # campos que definem o player do jogo
     gold = models.PositiveIntegerField(default=0)  # dinheiro na mao
 
-    ataque = models.PositiveSmallIntegerField(default=10)
-    defesa = models.PositiveSmallIntegerField(default=10)
-    destreza = models.PositiveSmallIntegerField(default=10)
+    hp = models.PositiveIntegerField(default=0)  # pontos ficsicos
+    hp_atual = models.PositiveIntegerField(default=0)  # atuais
 
-    vida = models.PositiveSmallIntegerField(default=10)
+    # ATB de batalha
+
+    indice_ataque = models.PositiveSmallIntegerField(default=0)  # Fisico
+    indice_defesa = models.PositiveSmallIntegerField(default=0)  # Defesa Fisica
+    acurancia_magica = models.PositiveIntegerField(default=0)
+    defesa_magica = models.PositiveIntegerField(default=0)
+
+    # ATB basicos
+
+    forca = models.PositiveSmallIntegerField(default=0)
+    agilidade   = models.PositiveSmallIntegerField(default=0)
+    inteligencia = models.PositiveSmallIntegerField(default=0)
+    sabedoria = models.PositiveSmallIntegerField(default=0)
+    carisma = models.PositiveSmallIntegerField(default=0)
+
+    # Controle de ações do personagem.
 
     energia = models.PositiveSmallIntegerField(default=20)  # energia para fazer quests
     raiva = models.PositiveSmallIntegerField(default=5)  # raiva para atacar outros players
 
-    hp = models.PositiveIntegerField(default=0)  # hp = vida * 10
     energia_atual = models.PositiveIntegerField(default=20)
     raiva_atual = models.PositiveIntegerField(default=5)
 
@@ -37,7 +49,9 @@ class Personagem(models.Model):
     energia_update = models.DateTimeField(auto_now_add=True)  # 1 de energia a cada minuto
     raiva_update = models.DateTimeField(auto_now_add=True)  # 1 de raiva a cada 5 minutos
 
+
     # relacionamentos
+
     armas = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True)
     armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True)
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, null=True)
@@ -61,7 +75,7 @@ class Personagem(models.Model):
     def get_absolute_url(self):
         return reverse('selecao', args=(self.pk,))
 
-    # verifica se o player subiu de nivel
+    # verifica se o player subiu de nível
     def level_up(self):
         # definimos a quantidade de xp para cada nivel
         experiencia_necessaria = {1: 10, 2: 25, 3: 50, 4: 80, 5: 115,
@@ -69,12 +83,21 @@ class Personagem(models.Model):
                                   11: 790, 12: 970, 13: 1200, 14: 1600, 15: 2000,
                                   16: 2500, 17: 3000, 18: 4000, 19: 5200, 20: 6500}
 
+
         if self.experiencia >= experiencia_necessaria[self.nivel + 1]:
             self.nivel = self.nivel + 1  # sobe de nivel
             self.pontos = self.pontos + 5  # adiciona 5 pontos para o usuario distribuir
-            self.hp = self.vida * 10  # recupera a vida
+            self.hp += self.classe.hp_up# Maximo de vida
+            self.hp_atual = self.hp
             self.energia_atual = self.energia  # recupera a energia
             self.raiva_atual = self.raiva  # recupera a raiva
+
+            # Aumentando ATB de Combate.
+            self.indice_ataque += self.classe.indice_ataque_up
+            self.indice_defesa += self.classe.indice_defesa_up
+            self.acurancia_magica += self.classe.acurancia_magica_up
+            self.defesa_magica += self.classe.defesa_magica_up
+
 
             return True
         else:
