@@ -42,11 +42,13 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
     def post(self, request):
         form = PersonagemForm(request.POST)
         if form.is_valid():
-            player = Personagem()
+
+            player = Personagem(get_object_or_404(Classe, pk=form.cleaned_data['classe'].pk), request.user, form.cleaned_data['nome'])
+            '''
             player.user = request.user
             player.classe = form.cleaned_data['classe']
             player.nome = form.cleaned_data['nome']
-
+           
             player.save()
 
             classe = get_object_or_404(Classe, pk=form.cleaned_data['classe'].pk)
@@ -72,7 +74,7 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
                 InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
-            )
+            )'''
 
             return redirect('personagens')
 

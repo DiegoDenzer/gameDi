@@ -6,6 +6,7 @@ from django.utils import timezone
 from base.models.arma import Arma
 from base.models.armadura import Armadura
 from base.models.classe import Classe
+from base.models.inventario import Inventario
 
 
 class Personagem(models.Model):
@@ -29,7 +30,7 @@ class Personagem(models.Model):
     # ATB basicos
 
     forca = models.PositiveSmallIntegerField(default=0)
-    agilidade   = models.PositiveSmallIntegerField(default=0)
+    agilidade = models.PositiveSmallIntegerField(default=0)
     inteligencia = models.PositiveSmallIntegerField(default=0)
     sabedoria = models.PositiveSmallIntegerField(default=0)
     carisma = models.PositiveSmallIntegerField(default=0)
@@ -58,6 +59,36 @@ class Personagem(models.Model):
 
     # pontos ao subir de nivel
     pontos = models.PositiveSmallIntegerField(default=0)
+
+    def __init__(self, classe, user, nome):
+        self.nome = nome
+        self.classe = classe
+        self.user = user
+
+        self.save()
+
+        # colocar Atb da classe
+
+        self.save()
+
+        # Cria Invetario para o personagem
+        inv = Inventario()
+        inv.personagem = self
+
+        inv.save()
+
+        # Tres Poçoes basicas
+        # p_hp = Pocao.objects.get(pk=1)
+        # p_energia = Pocao.objects.get(pk=2)
+        # p_raiva = Pocao.objects.get(pk=3)
+
+        # InventarioItem.objects.bulk_create([
+        #    InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
+        #    InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
+        #    InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
+        # )
+
+
 
     class Meta:
         db_table = 'personagem'
@@ -109,7 +140,7 @@ class Personagem(models.Model):
         # agora = datetime.datetime.now()
         agora = timezone.now()
         # verifica se o usuario tem menos HP do que deveria
-        if self.hp < self.vida * 10:
+        if self.hp < self.hp_atual:
             # verifica quanto tempo passou desde a ultima atualizacao do hp
             tempo = agora - self.hp_update
             # o hp atualiza a cada dois minutos
@@ -121,8 +152,8 @@ class Personagem(models.Model):
                 # adiciona a quantidade de updates no hp
                 self.hp = self.hp + updates
                 # verifica se ficamos com mais hp do que o maximo permitido
-                if self.hp > self.vida * 10:
-                    self.hp = self.vida * 10
+                if self.hp_atual > self.hp:
+                    self.hp_atual = self.hp
                 # agora que verificou o ultimo update de hp, atualiza a variavel hp_update
                 self.hp_update = agora
         else:
