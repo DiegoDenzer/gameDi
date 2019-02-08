@@ -6,7 +6,6 @@ from django.utils import timezone
 from base.models.arma import Arma
 from base.models.armadura import Armadura
 from base.models.classe import Classe
-from base.models.inventario import Inventario
 
 
 class Personagem(models.Model):
@@ -26,6 +25,9 @@ class Personagem(models.Model):
     indice_defesa = models.PositiveSmallIntegerField(default=0)  # Defesa Fisica
     acurancia_magica = models.PositiveIntegerField(default=0)
     defesa_magica = models.PositiveIntegerField(default=0)
+
+    dano_minimo = models.PositiveIntegerField(default=0)
+    dano_max = models.PositiveIntegerField(default=0)
 
     # ATB basicos
 
@@ -60,7 +62,7 @@ class Personagem(models.Model):
     # pontos ao subir de nivel
     pontos = models.PositiveSmallIntegerField(default=0)
 
-    def __init__(self, classe, user, nome):
+    def criar_personagem(self, classe=None, user=None, nome=None):
         self.nome = nome
         self.classe = classe
         self.user = user
@@ -68,27 +70,13 @@ class Personagem(models.Model):
         self.save()
 
         # colocar Atb da classe
-
+        self.acurancia_magica += classe.acurancia_magica_up
+        self.defesa_magica += classe.defesa_magica_up
+        self.indice_defesa += classe.indice_defesa_up
+        self.indice_ataque += classe.indice_ataque_up
+        self.dano_minimo += classe.dano_base_minimo_up
+        self.dano_max += classe.dano_base_max_up
         self.save()
-
-        # Cria Invetario para o personagem
-        inv = Inventario()
-        inv.personagem = self
-
-        inv.save()
-
-        # Tres Poçoes basicas
-        # p_hp = Pocao.objects.get(pk=1)
-        # p_energia = Pocao.objects.get(pk=2)
-        # p_raiva = Pocao.objects.get(pk=3)
-
-        # InventarioItem.objects.bulk_create([
-        #    InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
-        #    InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
-        #    InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
-        # )
-
-
 
     class Meta:
         db_table = 'personagem'
@@ -128,7 +116,7 @@ class Personagem(models.Model):
             self.indice_defesa += self.classe.indice_defesa_up
             self.acurancia_magica += self.classe.acurancia_magica_up
             self.defesa_magica += self.classe.defesa_magica_up
-
+            self.dano_minimo += self.
 
             return True
         else:

@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from base.models import arma, personagem
 from base.models.arma import Arma
 from base.models.armadura import Armadura
 from base.models.classe import Classe

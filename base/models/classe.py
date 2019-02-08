@@ -12,13 +12,15 @@ class Classe(models.Model):
     acurancia_magica_inicial = models.PositiveIntegerField(default=0)
     defesa_magica_inicial = models.PositiveIntegerField(default=0)
     dano_base_inicial = models.PositiveIntegerField(default=0)
+    dano_mim_inicial = models.PositiveIntegerField(default=0)
+    dano_max_inicial = models.PositiveIntegerField(default=0)
+
 
     # ATB de batalha Por Level de cada classe
     indice_ataque_up = models.PositiveSmallIntegerField(default=0)
     indice_defesa_up = models.PositiveSmallIntegerField(default=0)
     acurancia_magica_up = models.PositiveIntegerField(default=0)
     defesa_magica_up = models.PositiveIntegerField(default=0)
-    dano_base_up = models.PositiveIntegerField(default=0)
 
     hp_up = models.PositiveIntegerField(default=0)
 

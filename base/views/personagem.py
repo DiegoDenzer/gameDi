@@ -42,30 +42,16 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
     def post(self, request):
         form = PersonagemForm(request.POST)
         if form.is_valid():
-
-            player = Personagem(get_object_or_404(Classe, pk=form.cleaned_data['classe'].pk), request.user, form.cleaned_data['nome'])
-            '''
-            player.user = request.user
-            player.classe = form.cleaned_data['classe']
-            player.nome = form.cleaned_data['nome']
-           
-            player.save()
-
+            # Obter Classe.
             classe = get_object_or_404(Classe, pk=form.cleaned_data['classe'].pk)
-            player.ataque += player.ataque + classe.ataque
-            player.defesa += player.defesa + classe.defesa
-            player.destreza += player.destreza + classe.destreza
-            player.vida += player.vida + classe.vida
-            player.hp = player.vida * 10
-            player.save()
+            # Criar o Jogador
+            personagem = Personagem()
+            personagem.criar_personagem(classe, request.user, form.cleaned_data['nome'])
 
             # Cria Invetario para o personagem
             inv = Inventario()
-            inv.personagem = player
+            inv.criar_inventario()
 
-            inv.save()
-
-            # Tres Poçoes basicas
             p_hp = Pocao.objects.get(pk=1)
             p_energia = Pocao.objects.get(pk=2)
             p_raiva = Pocao.objects.get(pk=3)
@@ -74,7 +60,7 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
                 InventarioItem(id=uuid.uuid4(), pocao=p_hp, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_energia, inventario=inv),
                 InventarioItem(id=uuid.uuid4(), pocao=p_raiva, inventario=inv)]
-            )'''
+            )
 
             return redirect('personagens')
 

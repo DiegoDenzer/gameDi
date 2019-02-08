@@ -15,6 +15,10 @@ class Inventario(models.Model):
     personagem = models.ForeignKey(Personagem, on_delete=models.CASCADE)
     limite_max = models.IntegerField(default=30)
 
+    def criar_inventario(self, personagem):
+        self.personagem = personagem
+        self.save()
+
     @property
     def numero_itens(self):
         return self.itens.all().count()
