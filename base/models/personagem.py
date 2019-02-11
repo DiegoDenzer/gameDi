@@ -1,5 +1,8 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import UUIDField
 from django.urls import reverse
 from django.utils import timezone
 
@@ -10,8 +13,10 @@ from base.models.classe import Classe
 
 class Personagem(models.Model):
 
+    id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+
     nome = models.CharField(max_length=30)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,  verbose_name='Usuário')
 
     # campos que definem o player do jogo
     gold = models.PositiveIntegerField(default=0)  # dinheiro na mao
@@ -74,8 +79,8 @@ class Personagem(models.Model):
         self.defesa_magica += classe.defesa_magica_up
         self.indice_defesa += classe.indice_defesa_up
         self.indice_ataque += classe.indice_ataque_up
-        self.dano_minimo += classe.dano_base_minimo_up
-        self.dano_max += classe.dano_base_max_up
+        self.dano_minimo += classe.dano_mim_inicial
+        self.dano_max += classe.dano_max_inicial
         self.save()
 
     class Meta:
@@ -116,7 +121,8 @@ class Personagem(models.Model):
             self.indice_defesa += self.classe.indice_defesa_up
             self.acurancia_magica += self.classe.acurancia_magica_up
             self.defesa_magica += self.classe.defesa_magica_up
-            self.dano_minimo += self.
+            self.dano_minimo += self.classe.dano_mim_inicial * 3
+            self.dano_max += self.classe.dano_max_inicial * 3
 
             return True
         else:

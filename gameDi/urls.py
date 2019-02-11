@@ -24,6 +24,7 @@ from gameDi import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('jet', include('jet.urls', 'jet')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', include('allauth.urls')),
     path('', v.login, name="account_login"),

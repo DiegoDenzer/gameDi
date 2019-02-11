@@ -11,7 +11,6 @@ class Classe(models.Model):
     indice_defesa_inicial = models.PositiveSmallIntegerField(default=0)
     acurancia_magica_inicial = models.PositiveIntegerField(default=0)
     defesa_magica_inicial = models.PositiveIntegerField(default=0)
-    dano_base_inicial = models.PositiveIntegerField(default=0)
     dano_mim_inicial = models.PositiveIntegerField(default=0)
     dano_max_inicial = models.PositiveIntegerField(default=0)
 

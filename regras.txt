@@ -4,7 +4,7 @@ Atributos:
 EXEMPLOS LVL 1.
 ----------------------------------------
     LEVEL 1 GUERREIRO
-    1-8      (Dano)      +2d8
+    1-8      (Dano)      +2d8 2-16
     25 Hp    (PF)
 
     9 - Indice Ataque                              5 + 9 = 14
