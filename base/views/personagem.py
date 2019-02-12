@@ -50,7 +50,7 @@ class PersonagemCreatedView(LoginRequiredMixin, View):
 
             # Cria Invetario para o personagem
             inv = Inventario()
-            inv.criar_inventario()
+            inv.criar_inventario(personagem)
 
             p_hp = Pocao.objects.get(pk=1)
             p_energia = Pocao.objects.get(pk=2)
@@ -111,19 +111,24 @@ class PesonagemDetailView(LoginRequiredMixin, View):
 
 
 def distribuir_atributo(personagem, atributo):
+
     personagem.refresh()
     personagem.save()
     if personagem.pontos > 0:
         if atributo == 'ataque':
             personagem.ataque += 1
-        elif atributo == 'defesa':
-            personagem.defesa += 1
-        elif atributo == 'vida':
-            personagem.vida += 1
+        elif atributo == 'agilidade':
+            personagem.agilidade += 1
+        elif atributo == 'inteligencia':
+            personagem.inteligencia += 1
+        elif atributo == 'sabedoria':
+            personagem.sabedoria += 1
+        elif atributo == 'carisma':
+            personagem.carisma += 1
         elif atributo == 'energia':
-            personagem.energia += 1
+            personagem.carisma += 1
         elif atributo == 'raiva':
-            personagem.raiva += 1
+            personagem.carisma += 1
         personagem.pontos -= 1
         personagem.save()
 
@@ -138,23 +143,43 @@ class AddAtaque(LoginRequiredMixin, View):
             return redirect('personagem_detail')
 
 
-class AddDefesa(LoginRequiredMixin, View):
+class AddAgilidade(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuir_atributo(personagem, 'defesa')
+            distribuir_atributo(personagem, 'agilidade')
             return redirect('personagem_detail')
 
 
-class AddVida(LoginRequiredMixin, View):
+class AddInteligencia(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
         personagem = Personagem.objects.get(pk=request.session['player_id'])
         if valida_jogador(request, personagem):
-            distribuir_atributo(personagem, 'vida')
+            distribuir_atributo(personagem, 'inteligencia')
+            return redirect('personagem_detail')
+
+
+class AddSabedoria(LoginRequiredMixin, View):
+    login_url = '/'
+
+    def get(self, request):
+        personagem = Personagem.objects.get(pk=request.session['player_id'])
+        if valida_jogador(request, personagem):
+            distribuir_atributo(personagem, 'sabedoria')
+            return redirect('personagem_detail')
+
+
+class AddCarisma(LoginRequiredMixin, View):
+    login_url = '/'
+
+    def get(self, request):
+        personagem = Personagem.objects.get(pk=request.session['player_id'])
+        if valida_jogador(request, personagem):
+            distribuir_atributo(personagem, 'carisma')
             return redirect('personagem_detail')
 
 

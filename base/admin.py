@@ -37,8 +37,16 @@ class ClasseAdmin(admin.ModelAdmin):
 
 
 class ArmaAdmin(admin.ModelAdmin):
-    pass
-
+    fieldsets = (
+        ('Basico', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': ('nome', 'nivel', 'compra', 'venda'),
+        }),
+        ('Dano', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': ('dano_min', 'dano_max'),
+        })
+    )
 
 class ArmaduraAdmin(admin.ModelAdmin):
     pass
@@ -49,14 +57,13 @@ class PersonagemAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Basico', {
             'classes': ('grp-collapse grp-open',),
-            'fields': (('nome', 'classe', 'user', 'nivel', 'gold')),
+            'fields': ('nome', 'classe', 'user', 'nivel', 'gold'),
         }),
         ('Atributos', {
             'classes': ('grp-collapse grp-open',),
-            'fields': (('agilidade', 'forca','inteligencia', 'sabedoria', 'carisma')),
+            'fields': ('agilidade', 'forca','inteligencia', 'sabedoria', 'carisma'),
         })
     )
-
 
 
 class InvertarioAdmin(admin.ModelAdmin):

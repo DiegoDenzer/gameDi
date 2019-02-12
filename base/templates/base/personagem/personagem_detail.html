@@ -3,18 +3,20 @@
 {% block content %}
     Nome: {{ personagem.nome  }}<br>
     Nível: {{ personagem.nivel }}<br>
-    HP: {{ personagem.hp|floatformat:"0"  }} / {% widthratio  personagem.vida 1 10 %} <br>  <br>
-    Raiva: {{ personagem.raiva_atual }} / {{ personagem.raiva }}<br>
+    HP: {{ personagem.hp_atual|floatformat:"0"  }} / {{ personagem.hp}} <br>
+    Raiva: {{ personagem.raiva_atual|floatformat:"0" }} / {{ personagem.raiva }}<br>
     Energia: {{ personagem.energia_atual|floatformat:"0" }} / {{ personagem.energia }}<br>
     Experiencia: {{ personagem.experiencia }}<br>
-    Gold: {{ personagem.gold  }}
+    Gold: {{ personagem.gold }}
 
     <br><br>
     Atributos<br>
     Pontos Diponiveis : {{  personagem.pontos }} <br>
     Ataque: {{ personagem.ataque }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_ataque' %}">Add</a>{% endif %} <br>
-    Defesa: {{ personagem.defesa }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_defesa' %}">Add</a>{% endif %}<br>
-    Vida: {{ personagem.vida }} {% if personagem.pontos > 0 %}       <a href="{% url 'add_vida' %}">Add</a>{% endif %}<br>
+    Inteligencia: {{ personagem.inteligencia }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_inteligencia' %}">Add</a>{% endif %}<br>
+    Agilidade: {{ personagem.agilidade }} {% if personagem.pontos > 0 %}       <a href="{% url 'add_agilidade' %}">Add</a>{% endif %}<br>
+    Sabedoria: {{ personagem.sabedoria }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_sabedoria' %}">Add</a>{% endif %}<br>
+    Carisma: {{ personagem.carisma }} {% if personagem.pontos > 0 %}       <a href="{% url 'add_carisma' %}">Add</a>{% endif %}<br>
     Energia: {{ personagem.energia }} {% if personagem.pontos > 0 %} <a href="{% url 'add_energia' %}">Add</a>{% endif %}<br>
     Raiva: {{ personagem.raiva }} {% if personagem.pontos > 0 %}     <a href="{% url 'add_raiva' %}">Add</a>{% endif %}<br>
 

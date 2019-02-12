@@ -75,12 +75,14 @@ class Personagem(models.Model):
         self.save()
 
         # colocar Atb da classe
-        self.acurancia_magica += classe.acurancia_magica_up
-        self.defesa_magica += classe.defesa_magica_up
-        self.indice_defesa += classe.indice_defesa_up
-        self.indice_ataque += classe.indice_ataque_up
-        self.dano_minimo += classe.dano_mim_inicial
-        self.dano_max += classe.dano_max_inicial
+        self.hp = classe.hp_inicial
+        self.hp_atual = self.hp
+        self.acurancia_magica = classe.acurancia_magica_up
+        self.defesa_magica = classe.defesa_magica_up
+        self.indice_defesa = classe.indice_defesa_up
+        self.indice_ataque = classe.indice_ataque_up
+        self.dano_minimo = classe.dano_mim_inicial
+        self.dano_max = classe.dano_max_inicial
         self.save()
 
     class Meta:
@@ -106,7 +108,6 @@ class Personagem(models.Model):
                                   6: 155, 7: 210, 8: 340, 9: 480, 10: 630,
                                   11: 790, 12: 970, 13: 1200, 14: 1600, 15: 2000,
                                   16: 2500, 17: 3000, 18: 4000, 19: 5200, 20: 6500}
-
 
         if self.experiencia >= experiencia_necessaria[self.nivel + 1]:
             self.nivel = self.nivel + 1  # sobe de nivel

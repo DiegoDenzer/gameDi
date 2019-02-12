@@ -6,7 +6,8 @@ from base.views.inventario import UsarPocaoView, EquiparView
 from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView
 from base.views.luta import ListarAdversariosView, AtacarView
 from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, SelecionarView, \
-    PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddDefesa, AddVida, AddEnergia, AddRaiva, ClasseViewSet
+    PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddEnergia, AddRaiva, ClasseViewSet, \
+    AddAgilidade, AddInteligencia, AddSabedoria, AddCarisma
 from base.views.quest import QuestListView, QuestView
 
 router = routers.DefaultRouter()
@@ -14,19 +15,21 @@ router.register(r'classes', ClasseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', logout_view , name='logout'),
+    path('', logout_view, name='logout'),
     path('personagens', PersonagensListView.as_view(), name='personagens'),
     path('novo_personagem', PersonagemCreatedView.as_view(), name='novo_personagem'),
     path('personagem_detail', PesonagemDetailView.as_view(), name='personagem_detail'),
     path('mundo', SelecionarView.as_view(), name='mundo'),
-    path('deletar/<int:player>', PersonagemDeleteView.as_view(), name='deletar'),
+    path('deletar/<str:player>', PersonagemDeleteView.as_view(), name='deletar'),
     path('add_ataque', AddAtaque.as_view(), name='add_ataque'),
-    path('add_defesa', AddDefesa.as_view(), name='add_defesa'),
-    path('add_vida', AddVida.as_view(), name='add_vida'),
+    path('add_agilidae', AddAgilidade.as_view(), name='add_agilidade'),
+    path('add_inteligencia', AddInteligencia.as_view(), name='add_inteligencia'),
+    path('add_sabedoria', AddSabedoria.as_view(), name='add_sabedoria'),
+    path('add_carisma', AddCarisma.as_view(), name='add_carisma'),
     path('add_energia', AddEnergia.as_view(), name='add_energia'),
     path('add_raiva', AddRaiva.as_view(), name='add_raiva'),
 
-    path('atacar/<int:alvo>', AtacarView.as_view(), name='atacar'),
+    path('atacar/<str:alvo>', AtacarView.as_view(), name='atacar'),
 
     # Bases
     path('alvos', ListarAdversariosView.as_view(), name='alvos'),
