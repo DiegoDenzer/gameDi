@@ -4,6 +4,7 @@ from django.contrib import admin
 from base.models.arma import Arma
 from base.models.armadura import Armadura
 from base.models.classe import Classe
+from base.models.inimigo import Inimigo
 from base.models.inventario import Inventario
 from base.models.itens import Receita
 from base.models.personagem import Personagem
@@ -81,7 +82,10 @@ class QuestAdmin(admin.ModelAdmin):
 class ReceitaAdmin(admin.ModelAdmin):
     pass
 
+class InimigoAdmin(admin.ModelAdmin):
+    pass
 
+admin.site.register(Inimigo, InimigoAdmin)
 admin.site.register(Classe, ClasseAdmin)
 admin.site.register(Arma, ArmaAdmin)
 admin.site.register(Armadura, ArmaduraAdmin)
