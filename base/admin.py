@@ -9,7 +9,7 @@ from base.models.inventario import Inventario
 from base.models.itens import Receita
 from base.models.personagem import Personagem
 from base.models.pocao import Pocao
-from base.models.quest import Quest
+from base.models.quest import Quest, QuestInimigo
 
 
 class ClasseAdmin(admin.ModelAdmin):
@@ -75,12 +75,17 @@ class PocaoAdmin(admin.ModelAdmin):
     pass
 
 
+class QuestInimigoTabular(admin.TabularInline):
+    model = QuestInimigo
+
+
 class QuestAdmin(admin.ModelAdmin):
-    pass
+    inlines = (QuestInimigoTabular,)
 
 
 class ReceitaAdmin(admin.ModelAdmin):
     pass
+
 
 class InimigoAdmin(admin.ModelAdmin):
     pass

@@ -1,6 +1,7 @@
+import uuid
+
 from django.db import models
 from django.db.models import UUIDField
-from django.db.transaction import on_commit
 
 from base.models.inimigo import Inimigo
 from base.models.itens import MaterialCraft
@@ -20,8 +21,6 @@ class Quest(models.Model):
     itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)  # Material para craft
     chance_item_drop = models.PositiveIntegerField(default=0)
 
-    inimigos = models.ForeignKey(Inimigo, on_delete=models.CASCADE, related_name='inimigos', null=True)
-
     class Meta:
         db_table = 'quest'
         ordering = ('-pk',)
@@ -31,3 +30,9 @@ class Quest(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class QuestInimigo(models.Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    quest = models.ForeignKey(Quest, on_delete=models.CASCADE, related_name='inimigos')
+    inimigo = models.ForeignKey(Inimigo, on_delete=models.CASCADE)

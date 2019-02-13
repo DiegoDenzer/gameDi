@@ -32,9 +32,21 @@ class QuestView(View, LoginRequiredMixin):
         jogador = Personagem.objects.get(pk=request.session['player_id'])
 
         if valida_jogador(request, jogador):
+
             quest = Quest.objects.get(pk=quest)
             if jogador.energia_atual < quest.gasto_energia:
                 return redirect('quests')
+
+            if quest.inimigos.count() > 0:
+                combatentes = []
+                for inimigo in list(quest.inimigos.all()):
+                    combatentes.append(inimigo.inimigo)
+                combatentes.append(jogador)
+                combatentes.sort(key=lambda a: a.agilidade, reverse=True)
+
+                for c in combatentes:
+                    print(c)
+
 
             jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
