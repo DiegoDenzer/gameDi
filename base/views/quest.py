@@ -44,10 +44,8 @@ class QuestView(View, LoginRequiredMixin):
                 combatentes.append(jogador)
                 combatentes.sort(key=lambda a: a.agilidade, reverse=True)
 
-
                 p1 = combatentes[0]
                 p2 = combatentes[1]
-
 
                 for turno in [1, 2]:
 
@@ -63,9 +61,11 @@ class QuestView(View, LoginRequiredMixin):
                         if p1.ataque(valor_dado) > p2.defesa:
                             if critico:
                                 dano = p1.dano * 2
+                                p2.hp_atual -= dano
                                 print(f'{p1.nome} Criticou com {dano}')
                             else:
                                 dano = p1.dano
+                                p2.hp_atual -= dano
                                 print(f'{p1.nome} atacou com {dano}')
                         else:
                             print(f'{p2.nome} defendeu')
@@ -84,9 +84,11 @@ class QuestView(View, LoginRequiredMixin):
                         if p2.ataque(valor_dado) > p1.defesa:
                             if critico:
                                 dano = p2.dano * 2
+                                p1.hp_atual -= dano
                                 print(f'{p2.nome} Criticou com {dano}')
                             else:
                                 dano = p2.dano
+                                p2.hp -= dano
                                 print(f'{p2.nome} atacou com {dano}')
                         else:
                             print(f'{p1.nome} defendeu')

@@ -16,6 +16,7 @@ class Inimigo(models.Model):
     dano_max = models.PositiveIntegerField(default=1)
 
     hp = models.PositiveIntegerField(default=0)
+    hp_atual = models.PositiveIntegerField(default=0)
 
     indice_ataque = models.PositiveSmallIntegerField(default=0)  # Fisico
     indice_defesa = models.PositiveSmallIntegerField(default=0)  # Defesa Fisica
