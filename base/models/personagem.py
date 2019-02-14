@@ -1,4 +1,5 @@
 import uuid
+from random import randint
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -77,10 +78,21 @@ class Personagem(models.Model):
         # colocar Atb da classe
         self.hp = classe.hp_inicial
         self.hp_atual = self.hp
-        self.acurancia_magica = classe.acurancia_magica_up
-        self.defesa_magica = classe.defesa_magica_up
-        self.indice_defesa = classe.indice_defesa_up
-        self.indice_ataque = classe.indice_ataque_up
+
+        # Basicos
+
+        self.forca = classe.forca_inicial
+        self.inteligencia = classe.inteligencia_inicial
+        self.agilidade = classe.agilidade_inicial
+        self.sabedoria = classe.sabedoria_inicial
+        self.carisma = classe.carisma_inicial
+
+        # ataque/ defesa
+
+        self.acurancia_magica = classe.acurancia_magica_inicial
+        self.defesa_magica = classe.defesa_magica_inicial
+        self.indice_defesa = classe.indice_defesa_inicial
+        self.indice_ataque = classe.indice_ataque_inicial
         self.dano_minimo = classe.dano_mim_inicial
         self.dano_max = classe.dano_max_inicial
         self.save()
@@ -94,6 +106,9 @@ class Personagem(models.Model):
 
     def __str__(self):
         return self.nome
+
+    def atacar(self):
+        return
 
     def get_delete_url(self):
         return reverse('deletar', args=(self.pk,))
@@ -122,8 +137,8 @@ class Personagem(models.Model):
             self.indice_defesa += self.classe.indice_defesa_up
             self.acurancia_magica += self.classe.acurancia_magica_up
             self.defesa_magica += self.classe.defesa_magica_up
-            self.dano_minimo += self.classe.dano_mim_inicial * 3
-            self.dano_max += self.classe.dano_max_inicial * 3
+            self.dano_minimo = self.nivel * self.dano_minimo
+            self.dano_max = self.nivel * self.dano_max
 
             return True
         else:
@@ -196,3 +211,22 @@ class Personagem(models.Model):
         else:
             # se nao existe nenhum update para fazer, atualiza o raiva_update
             self.raiva_update = agora
+
+    def ataque(self, valor_dado):
+        if self.armas:
+            if self.armas.atributo_extra:
+                if self.armas.atributo_extra == 'IA':
+                    return valor_dado + self.indice_ataque + self.armas.valor_extra
+        else:
+            return valor_dado + self.indice_ataque
+
+    @property
+    def dano(self):
+        if self.armas:
+            return randint(self.dano_minimo, self.dano_max+1) + randint(self.armas.dano_min, self.armas.dano_max)
+        else:
+            return randint(self.dano_minimo, self.dano_max + 1)
+
+    @property
+    def defesa(self):
+        return self.indice_defesa

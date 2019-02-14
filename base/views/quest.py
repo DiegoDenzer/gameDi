@@ -8,7 +8,7 @@ from django.views import View
 from base.models.inventario import InventarioItem, Inventario
 from base.models.personagem import Personagem
 from base.models.quest import Quest
-from base.util.util import valida_jogador
+from base.util.util import valida_jogador, rolar_dado
 
 
 class QuestListView(View, LoginRequiredMixin):
@@ -44,9 +44,54 @@ class QuestView(View, LoginRequiredMixin):
                 combatentes.append(jogador)
                 combatentes.sort(key=lambda a: a.agilidade, reverse=True)
 
-                for c in combatentes:
-                    print(c)
 
+                p1 = combatentes[0]
+                p2 = combatentes[1]
+
+
+                for turno in [1, 2]:
+
+                    valor_dado = rolar_dado()
+                    print(f'{p1.nome} rolou: {valor_dado} ')
+                    critico = False
+                    pode_atacar = False
+                    if valor_dado > 2:
+                        pode_atacar = True
+                        if valor_dado == 20:
+                            critico = True
+                    if pode_atacar:
+                        if p1.ataque(valor_dado) > p2.defesa:
+                            if critico:
+                                dano = p1.dano * 2
+                                print(f'{p1.nome} Criticou com {dano}')
+                            else:
+                                dano = p1.dano
+                                print(f'{p1.nome} atacou com {dano}')
+                        else:
+                            print(f'{p2.nome} defendeu')
+                    else:
+                        print(f'{p1.nome} errou ataque')
+
+                    valor_dado = rolar_dado()
+                    print(f'{p2.nome} rolou: {valor_dado} ')
+                    critico = False
+                    pode_atacar = False
+                    if valor_dado > 2:
+                        pode_atacar = True
+                        if valor_dado == 20:
+                            critico = True
+                    if pode_atacar:
+                        if p2.ataque(valor_dado) > p1.defesa:
+                            if critico:
+                                dano = p2.dano * 2
+                                print(f'{p2.nome} Criticou com {dano}')
+                            else:
+                                dano = p2.dano
+                                print(f'{p2.nome} atacou com {dano}')
+                        else:
+                            print(f'{p1.nome} defendeu')
+                    else:
+                        print(f'{p2.nome} errou ataque')
 
             jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia

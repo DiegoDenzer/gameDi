@@ -60,9 +60,15 @@ class PersonagemAdmin(admin.ModelAdmin):
             'classes': ('grp-collapse grp-open',),
             'fields': ('nome', 'classe', 'user', 'nivel', 'gold'),
         }),
+
+        ('Ataque / Defesa', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': ('dano_minimo', 'dano_max', 'armas', 'armaduras'),
+        }),
+
         ('Atributos', {
             'classes': ('grp-collapse grp-open',),
-            'fields': ('agilidade', 'forca','inteligencia', 'sabedoria', 'carisma'),
+            'fields': ('agilidade', 'forca', 'inteligencia', 'sabedoria', 'carisma'),
         })
     )
 

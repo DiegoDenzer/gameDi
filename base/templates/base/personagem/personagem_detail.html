@@ -12,7 +12,7 @@
     <br><br>
     Atributos<br>
     Pontos Diponiveis : {{  personagem.pontos }} <br>
-    Ataque: {{ personagem.ataque }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_ataque' %}">Add</a>{% endif %} <br>
+    Ataque: {{ personagem.forca }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_ataque' %}">Add</a>{% endif %} <br>
     Inteligencia: {{ personagem.inteligencia }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_inteligencia' %}">Add</a>{% endif %}<br>
     Agilidade: {{ personagem.agilidade }} {% if personagem.pontos > 0 %}       <a href="{% url 'add_agilidade' %}">Add</a>{% endif %}<br>
     Sabedoria: {{ personagem.sabedoria }} {% if personagem.pontos > 0 %}   <a href="{% url 'add_sabedoria' %}">Add</a>{% endif %}<br>

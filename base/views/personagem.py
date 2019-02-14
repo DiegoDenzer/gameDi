@@ -116,7 +116,7 @@ def distribuir_atributo(personagem, atributo):
     personagem.save()
     if personagem.pontos > 0:
         if atributo == 'ataque':
-            personagem.ataque += 1
+            personagem.forca += 1
         elif atributo == 'agilidade':
             personagem.agilidade += 1
         elif atributo == 'inteligencia':
@@ -126,9 +126,9 @@ def distribuir_atributo(personagem, atributo):
         elif atributo == 'carisma':
             personagem.carisma += 1
         elif atributo == 'energia':
-            personagem.carisma += 1
+            personagem.energia += 1
         elif atributo == 'raiva':
-            personagem.carisma += 1
+            personagem.raiva += 1
         personagem.pontos -= 1
         personagem.save()
 

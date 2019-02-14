@@ -17,6 +17,8 @@ class Arma(models.Model):
     agilidade_minima = models.PositiveIntegerField(default=0)
     inteligenica_minima = models.PositiveIntegerField(default=0)
 
+
+
     atributo_extra = models.CharField(choices=ATRIBUTO_EXTRA, null=True, blank=True, max_length=2)
     valor_extra = models.PositiveIntegerField(default=0)
 
