@@ -25,75 +25,78 @@ class QuestListView(View, LoginRequiredMixin):
             return render(request, 'base/quest/quests.html', {'personagem': jogador, 'quests': Quest.objects.all()})
 
 
+def atacar(atacante, defensor):
+    valor_dado = rolar_dado()
+    print(f'{atacante.nome} rolou: {valor_dado} ')
+    critico = False
+    pode_atacar = False
+
+    if valor_dado > 2:
+        pode_atacar = True
+        if valor_dado == 20:
+            critico = True
+    if pode_atacar:
+        if atacante.ataque(valor_dado) > defensor.defesa:
+            if critico:
+                dano = atacante.dano * 2
+                atacante.hp_atual -= dano
+                print(f'{atacante.nome} Criticou com {dano}')
+            else:
+                dano = atacante.dano
+                defensor.hp_atual -= dano
+                print(f'{atacante.nome} atacou com {dano}')
+        else:
+            print(f'{defensor.nome} defendeu')
+    else:
+        print(f'{atacante.nome} errou ataque')
+
+
+def combate(request, jogador, quest):
+
+    if jogador.energia_atual < quest.gasto_energia:
+        return redirect('quests')
+
+    if quest.inimigos.count() > 0:
+
+        inimigos = list(quest.inimigos.all())
+
+        inimigos.sort(key=lambda a: a.inimigo.agilidade, reverse=True)
+
+        fim_combate = True
+
+        while fim_combate:
+
+            hp_inimigos = 0
+
+            for inimigo in inimigos:
+
+                if jogador.agilidade > inimigo.inimigo.agilidade:
+                    atacar(jogador, inimigo.inimigo)
+                    if inimigo.inimigo.hp_atual > 0:
+                        atacar(inimigo.inimigo, jogador)
+                else:
+                    atacar(inimigo.inimigo, jogador)
+                    if jogador.hp_atual > 0:
+                        atacar(jogador, inimigo.inimigo)
+
+                hp_inimigos += inimigo.inimigo.hp_atual
+
+            if jogador.hp_atual <= 0 or hp_inimigos <= 0:
+                fim_combate = False
+
+
 class QuestView(View, LoginRequiredMixin):
     login_url = '/'
 
     def get(self, request, quest):
+
         jogador = Personagem.objects.get(pk=request.session['player_id'])
 
-        if valida_jogador(request, jogador):
+        if valida_jogador(request, jogador) and jogador.hp_atual > 0:
 
             quest = Quest.objects.get(pk=quest)
-            if jogador.energia_atual < quest.gasto_energia:
-                return redirect('quests')
 
-            if quest.inimigos.count() > 0:
-                combatentes = []
-                for inimigo in list(quest.inimigos.all()):
-                    combatentes.append(inimigo.inimigo)
-                combatentes.append(jogador)
-                combatentes.sort(key=lambda a: a.agilidade, reverse=True)
-
-                p1 = combatentes[0]
-                p2 = combatentes[1]
-
-                for turno in [1, 2]:
-
-                    valor_dado = rolar_dado()
-                    print(f'{p1.nome} rolou: {valor_dado} ')
-                    critico = False
-                    pode_atacar = False
-                    if valor_dado > 2:
-                        pode_atacar = True
-                        if valor_dado == 20:
-                            critico = True
-                    if pode_atacar:
-                        if p1.ataque(valor_dado) > p2.defesa:
-                            if critico:
-                                dano = p1.dano * 2
-                                p2.hp_atual -= dano
-                                print(f'{p1.nome} Criticou com {dano}')
-                            else:
-                                dano = p1.dano
-                                p2.hp_atual -= dano
-                                print(f'{p1.nome} atacou com {dano}')
-                        else:
-                            print(f'{p2.nome} defendeu')
-                    else:
-                        print(f'{p1.nome} errou ataque')
-
-                    valor_dado = rolar_dado()
-                    print(f'{p2.nome} rolou: {valor_dado} ')
-                    critico = False
-                    pode_atacar = False
-                    if valor_dado > 2:
-                        pode_atacar = True
-                        if valor_dado == 20:
-                            critico = True
-                    if pode_atacar:
-                        if p2.ataque(valor_dado) > p1.defesa:
-                            if critico:
-                                dano = p2.dano * 2
-                                p1.hp_atual -= dano
-                                print(f'{p2.nome} Criticou com {dano}')
-                            else:
-                                dano = p2.dano
-                                p2.hp -= dano
-                                print(f'{p2.nome} atacou com {dano}')
-                        else:
-                            print(f'{p1.nome} defendeu')
-                    else:
-                        print(f'{p2.nome} errou ataque')
+            combate(request, jogador, quest)
 
             jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia

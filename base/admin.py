@@ -58,7 +58,7 @@ class PersonagemAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Basico', {
             'classes': ('grp-collapse grp-open',),
-            'fields': ('nome', 'classe', 'user', 'nivel', 'gold'),
+            'fields': ('nome', 'classe', 'user', 'nivel', 'gold', 'hp', 'hp_atual'),
         }),
 
         ('Ataque / Defesa', {

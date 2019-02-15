@@ -61,8 +61,8 @@ class Personagem(models.Model):
 
     # relacionamentos
 
-    armas = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True)
-    armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True)
+    armas = models.ForeignKey(Arma, on_delete=models.CASCADE, null=True, blank=True)
+    armaduras = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True, blank=True)
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, null=True)
 
     # pontos ao subir de nivel
