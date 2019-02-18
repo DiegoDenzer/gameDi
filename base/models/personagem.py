@@ -119,10 +119,11 @@ class Personagem(models.Model):
     # verifica se o player subiu de nível
     def level_up(self):
         # definimos a quantidade de xp para cada nivel
-        experiencia_necessaria = {1: 10, 2: 25, 3: 50, 4: 80, 5: 115,
-                                  6: 155, 7: 210, 8: 340, 9: 480, 10: 630,
-                                  11: 790, 12: 970, 13: 1200, 14: 1600, 15: 2000,
-                                  16: 2500, 17: 3000, 18: 4000, 19: 5200, 20: 6500}
+        experiencia_necessaria = {1: 1100, 2: 2600, 3: 2600, 4: 4700, 5: 7700,
+                                  6: 12000, 7: 18200, 8: 27100, 9: 40000, 10: 58000,
+                                  11: 85000, 12: 12400, 13: 174000, 14: 240000, 15: 325000,
+                                  16: 436000, 17: 581000, 18: 769000, 19: 1014000, 20: 13330000,
+                                  21: 1740000, 22: 2270000, 23: 2910000, 24: 3680000, 25: 4600000}
 
         if self.experiencia >= experiencia_necessaria[self.nivel + 1]:
             self.nivel = self.nivel + 1  # sobe de nivel
@@ -214,11 +215,11 @@ class Personagem(models.Model):
 
     def ataque(self, valor_dado):
         if self.armas:
-            if self.armas.atributo_extra:
+            if self.armas.atributo_extra is not None:
                 if self.armas.atributo_extra == 'IA':
                     return valor_dado + self.indice_ataque + self.armas.valor_extra
-        else:
-            return valor_dado + self.indice_ataque
+
+        return valor_dado + self.indice_ataque
 
     @property
     def dano(self):

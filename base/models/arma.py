@@ -19,7 +19,7 @@ class Arma(models.Model):
 
 
 
-    atributo_extra = models.CharField(choices=ATRIBUTO_EXTRA, null=True, blank=True, max_length=2)
+    atributo_extra = models.CharField(choices=ATRIBUTO_EXTRA, null=True, blank=True, max_length = 2)
     valor_extra = models.PositiveIntegerField(default=0)
 
     imagem = models.ImageField(upload_to="armas", null=True, blank=True)
