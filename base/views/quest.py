@@ -40,15 +40,15 @@ def atacar(atacante, defensor):
             if critico:
                 dano = atacante.dano * 2
                 atacante.hp_atual -= dano
-                print(f'{atacante.nome} Criticou com {dano}')
+                return f'{atacante.nome} Criticou com {dano}'
             else:
                 dano = atacante.dano
                 defensor.hp_atual -= dano
-                print(f'{atacante.nome} atacou com {dano}')
+                return f'{atacante.nome} atacou com {dano}'
         else:
-            print(f'{defensor.nome} defendeu')
+            return f'{defensor.nome} defendeu'
     else:
-        print(f'{atacante.nome} errou ataque')
+        return f'{atacante.nome} errou ataque'
 
 
 def combate(request, jogador, quest):
@@ -58,11 +58,15 @@ def combate(request, jogador, quest):
 
     if quest.inimigos.count() > 0:
 
+        detalhes_combate = {}
+
         inimigos = list(quest.inimigos.all())
 
         inimigos.sort(key=lambda a: a.inimigo.agilidade, reverse=True)
 
         fim_combate = True
+
+        turno = 1
 
         while fim_combate:
 
@@ -71,18 +75,22 @@ def combate(request, jogador, quest):
             for inimigo in inimigos:
 
                 if jogador.agilidade > inimigo.inimigo.agilidade:
-                    atacar(jogador, inimigo.inimigo)
+                    detalhes_combate[f'{turno} - {jogador.nome}'] = atacar(jogador, inimigo.inimigo)
                     if inimigo.inimigo.hp_atual > 0:
-                        atacar(inimigo.inimigo, jogador)
+                        detalhes_combate[f'{turno} - {inimigo.inimigo.nome}'] = atacar(inimigo.inimigo, jogador)
                 else:
-                    atacar(inimigo.inimigo, jogador)
+                    detalhes_combate[f'{turno} - {inimigo.inimigo.nome}'] = atacar(inimigo.inimigo, jogador)
                     if jogador.hp_atual > 0:
-                        atacar(jogador, inimigo.inimigo)
+                        detalhes_combate[f'{turno} - {jogador.nome}'] = atacar(jogador, inimigo.inimigo)
 
                 hp_inimigos += inimigo.inimigo.hp_atual
 
             if jogador.hp_atual <= 0 or hp_inimigos <= 0:
                 fim_combate = False
+
+            turno += 1
+
+        return detalhes_combate
 
 
 class QuestView(View, LoginRequiredMixin):
@@ -94,9 +102,11 @@ class QuestView(View, LoginRequiredMixin):
 
         if valida_jogador(request, jogador) and jogador.hp_atual > 0:
 
+            data = {}
+
             quest = Quest.objects.get(pk=quest)
 
-            combate(request, jogador, quest)
+            data['combate'] = combate(request, jogador, quest)
 
             jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
