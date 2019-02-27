@@ -46,7 +46,7 @@ class AtacarView(LoginRequiredMixin, View):
 
         # pega o nosso jogador da sessao
         jogador = get_object_or_404(personagem, pk=request.session['player_id'])
-        
+
         # verifica se o jogador e o alvo sao a mesma pessoa ou se a experiencia do alvo eh menor que 50% da experiencia
         # do atacante
         if jogador == alvo or jogador.experiencia * 0.6 > alvo.experiencia:
