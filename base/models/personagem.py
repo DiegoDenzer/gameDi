@@ -214,11 +214,8 @@ class Personagem(models.Model):
             self.raiva_update = agora
 
     def ataque(self, valor_dado):
-        if self.armas:
-            if self.armas.atributo_extra is not None:
-                if self.armas.atributo_extra == 'IA':
-                    return valor_dado + self.indice_ataque + self.armas.valor_extra
-
+        if self.armas is not None and self.armas.atributo_extra is not None and self.armas.atributo_extra == 'IA':
+            return valor_dado + self.indice_ataque + self.armas.valor_extra
         return valor_dado + self.indice_ataque
 
     @property
