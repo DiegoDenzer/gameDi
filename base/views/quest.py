@@ -51,7 +51,7 @@ def atacar(atacante, defensor):
         return f'{atacante.nome} errou ataque'
 
 
-def combate(request, jogador, quest):
+def combate(jogador, quest):
 
     if jogador.energia_atual < quest.gasto_energia:
         return redirect('quests')
@@ -106,7 +106,7 @@ class QuestView(View, LoginRequiredMixin):
 
             quest = Quest.objects.get(pk=quest)
 
-            data['combate'] = combate(request, jogador, quest)
+            data['combate'] = combate(jogador, quest)
 
             jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
@@ -122,6 +122,6 @@ class QuestView(View, LoginRequiredMixin):
             jogador.level_up()
             jogador.save()
 
-            return redirect('quests')
+            return render(request, 'base/quest/resultado_quest.html', data)
         else:
             return redirect('quests')

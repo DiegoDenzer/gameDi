@@ -43,13 +43,13 @@ class UsarPocaoView(LoginRequiredMixin, View):
             personagem.refresh()
             item = InventarioItem.objects.get(id=item)
             if item.pocao is not None:
-                personagem.hp += item.pocao.hp
+                personagem.hp_atual += item.pocao.hp
                 personagem.energia_atual += item.pocao.energia
                 personagem.raiva_atual += item.pocao.raiva
                 item.delete()
 
-                if personagem.hp > personagem.vida * 10:
-                    personagem.hp = personagem.vida * 10
+                if personagem.hp_atual > personagem.hp:
+                    personagem.hp_atual = personagem.hp
                 if personagem.energia_atual > personagem.energia:
                     personagem.energia_atual = personagem.energia
                 if personagem.raiva_atual > personagem.raiva:
