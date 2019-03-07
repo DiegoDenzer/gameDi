@@ -11,7 +11,7 @@ SECRET_KEY = 'nw06@q4yoz=6)3ihj)97yn%5v24f-h-tlqa9lo#ey70hdg9dxy'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+# '0.0.0.0'
 INSTALLED_APPS = [
     'jet',
 
@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    # 'oauth2_provider',
+
     'crispy_forms',
     'rest_framework',
     'base'
@@ -38,6 +40,17 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 SITE_ID = 1
 
 REST_FRAMEWORK = {
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }

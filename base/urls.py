@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 
 from base.views.forja import ForjaView, MostrarReceitasView
 from base.views.inventario import UsarPocaoView, EquiparView
@@ -49,5 +50,5 @@ urlpatterns = [
     # Forja
     path('forja', ForjaView.as_view(), name='forja'),
     path('criar_item', MostrarReceitasView.as_view(), name='receitas'),
-
+    path('token/', obtain_jwt_token),
 ]
