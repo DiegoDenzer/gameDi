@@ -14,6 +14,8 @@ from base.views.quest import QuestListView, QuestView
 router = routers.DefaultRouter()
 router.register(r'classes', ClasseViewSet)
 
+
+
 urlpatterns = [
     path('', include(router.urls)),
     path('', logout_view, name='logout'),
@@ -50,5 +52,6 @@ urlpatterns = [
     # Forja
     path('forja', ForjaView.as_view(), name='forja'),
     path('criar_item', MostrarReceitasView.as_view(), name='receitas'),
-    path('token/', obtain_jwt_token),
+
+    # path('token/', obtain_jwt_token),
 ]

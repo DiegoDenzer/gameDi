@@ -10,9 +10,26 @@
 
     <br>
 
+    Resultado : {% if vitoria %}
+        Vitória
+        <br>
+        gold = {{ gold }}
+        <br>
+        xp = {{ xp }}
+    {% else %}
+        Derrota
+    {% endif %}
 
-    {% for com in combate %}
-         {{ com }}
+    <br>
+
+    Detalhes do Combate
+    {% for key, value in combate.items %}
+        <br>
+        ------------------------------
+        <br>
+         {{ key }}<br>
+          {{ value }}
+
     {% endfor %}
 
 

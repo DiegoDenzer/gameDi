@@ -34,7 +34,6 @@ class ListarAdversariosView(LoginRequiredMixin, View):
 
             return render(request, 'base/pvp/alvos.html', {'personagem': jogador, 'alvos': alvos})
 
-
 class AtacarView(LoginRequiredMixin, View):
     login_url = '/'
 

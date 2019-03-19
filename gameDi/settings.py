@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     # 'oauth2_provider',
-
+    'rest_auth',
+    'rest_auth.registration',
     'crispy_forms',
     'rest_framework',
     'base'
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SITE_ID = 1
+REST_USE_JWT = True
 
 REST_FRAMEWORK = {
 
@@ -179,3 +181,11 @@ JET_THEMES = [
 ]
 
 JET_SIDE_MENU_COMPACT = True
+
+# Ver para marcar falso
+REST_SESSION_LOGIN = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'

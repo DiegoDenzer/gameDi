@@ -27,7 +27,7 @@ class QuestListView(View, LoginRequiredMixin):
 
 def atacar(atacante, defensor):
     valor_dado = rolar_dado()
-    print(f'{atacante.nome} rolou: {valor_dado} ')
+
     critico = False
     pode_atacar = False
 
@@ -40,11 +40,11 @@ def atacar(atacante, defensor):
             if critico:
                 dano = atacante.dano * 2
                 atacante.hp_atual -= dano
-                return f'{atacante.nome} Criticou com {dano}'
+                return f'{atacante.nome} Acertou critico com {dano} de dano.'
             else:
                 dano = atacante.dano
                 defensor.hp_atual -= dano
-                return f'{atacante.nome} atacou com {dano}'
+                return f'{atacante.nome} casou {dano} de dano.'
         else:
             return f'{defensor.nome} defendeu'
     else:
@@ -72,18 +72,23 @@ def combate(jogador, quest):
 
             hp_inimigos = 0
 
+            lista = []
+
             for inimigo in inimigos:
 
                 if jogador.agilidade > inimigo.inimigo.agilidade:
-                    detalhes_combate[f'{turno} - {jogador.nome}'] = atacar(jogador, inimigo.inimigo)
+                    
+                    lista.append(atacar(jogador, inimigo.inimigo))
                     if inimigo.inimigo.hp_atual > 0:
                         detalhes_combate[f'{turno} - {inimigo.inimigo.nome}'] = atacar(inimigo.inimigo, jogador)
                 else:
-                    detalhes_combate[f'{turno} - {inimigo.inimigo.nome}'] = atacar(inimigo.inimigo, jogador)
+                    lista.append(atacar(inimigo.inimigo, jogador))
                     if jogador.hp_atual > 0:
-                        detalhes_combate[f'{turno} - {jogador.nome}'] = atacar(jogador, inimigo.inimigo)
+                        lista.append(atacar(jogador, inimigo.inimigo))
 
                 hp_inimigos += inimigo.inimigo.hp_atual
+
+                detalhes_combate[turno] = lista
 
             if jogador.hp_atual <= 0 or hp_inimigos <= 0:
                 fim_combate = False
@@ -107,21 +112,33 @@ class QuestView(View, LoginRequiredMixin):
             quest = Quest.objects.get(pk=quest)
 
             data['combate'] = combate(jogador, quest)
+            vitoria = False
+            if jogador.hp_atual > 0:
+                vitoria = True
+                data['vitoria'] = vitoria
+                # adiciona ganho de gold
+                ganho_de_gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
+                jogador.gold = jogador.gold + ganho_de_gold
+                data['gold'] = ganho_de_gold
 
-            jogador.gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
+                # adiciona experiencia ao jogador
+                xp_ganha = (quest.ganho_experiencia * randint(1, 3))
+                jogador.experiencia = jogador.experiencia + xp_ganha
+                data['xp'] = xp_ganha
+
+                # drop
+                if quest.itemDrop is not None:
+                    item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.itemDrop,
+                                                  inventario=Inventario.objects.get(personagem=jogador)),
+                    data['drop'] = item
+
+
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
-
-            # adiciona experiencia ao jogador
-            jogador.experiencia = jogador.experiencia + (quest.ganho_experiencia * randint(1, 3))
-
-            if quest.itemDrop is not None:
-                InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.itemDrop,
-                                              inventario=Inventario.objects.get(personagem=jogador)),
 
             # verifica se subiu de nivel
             jogador.level_up()
             jogador.save()
-
+            data['personagem'] = jogador
             return render(request, 'base/quest/resultado_quest.html', data)
         else:
             return redirect('quests')

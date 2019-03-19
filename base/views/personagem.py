@@ -204,6 +204,7 @@ class AddRaiva(LoginRequiredMixin, View):
 
 
 class ClasseViewSet(viewsets.ModelViewSet):
+
     """
     API endpoint that allows users to be viewed or edited.
     """
