@@ -75,23 +75,25 @@ def combate(jogador, quest):
             lista = []
 
             for inimigo in inimigos:
-
+                # Refatrado diminuir a complexidade cognitiva.
                 if jogador.agilidade > inimigo.inimigo.agilidade:
-                    
+                    # Jogador ataca primeiro.
                     lista.append(atacar(jogador, inimigo.inimigo))
-                    if inimigo.inimigo.hp_atual > 0:
-                        detalhes_combate[f'{turno} - {inimigo.inimigo.nome}'] = atacar(inimigo.inimigo, jogador)
-                else:
+                    atacou = True
+
+                elif inimigo.inimigo.hp_atual > 0:
+                    # inimigo ataca
                     lista.append(atacar(inimigo.inimigo, jogador))
-                    if jogador.hp_atual > 0:
-                        lista.append(atacar(jogador, inimigo.inimigo))
+                    # se jogador nao morreu ele ataca.
+
+                elif jogador.hp_atual > 0 and not atacou:
+                    lista.append(atacar(jogador, inimigo.inimigo))
 
                 hp_inimigos += inimigo.inimigo.hp_atual
 
                 detalhes_combate[turno] = lista
 
-            if jogador.hp_atual <= 0 or hp_inimigos <= 0:
-                fim_combate = False
+            fim_combate = jogador.hp_atual > 0 and hp_inimigos > 0
 
             turno += 1
 
