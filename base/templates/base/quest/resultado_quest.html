@@ -27,8 +27,15 @@
         <br>
         ------------------------------
         <br>
-         {{ key }}<br>
-          {{ value }}
+            {{ key }}<br>
+                <ul>
+                    {% for foo in value %}
+                        <li> {{ foo }} </li>
+                    {% endfor %}
+
+
+                </ul>
+
 
     {% endfor %}
 

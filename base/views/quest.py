@@ -75,18 +75,19 @@ def combate(jogador, quest):
             lista = []
 
             for inimigo in inimigos:
-                # Refatrado diminuir a complexidade cognitiva.
-                if jogador.agilidade > inimigo.inimigo.agilidade:
+                jogador_ataca = True
+                inimigo_ataca = True
+                if inimigo.inimigo.hp_atual > 0 and jogador.agilidade > inimigo.inimigo.agilidade:
                     # Jogador ataca primeiro.
                     lista.append(atacar(jogador, inimigo.inimigo))
-                    atacou = True
+                    nao_atacou = False
 
-                elif inimigo.inimigo.hp_atual > 0:
+                if inimigo.inimigo.hp_atual > 0 and jogador.hp_atual:
                     # inimigo ataca
                     lista.append(atacar(inimigo.inimigo, jogador))
                     # se jogador nao morreu ele ataca.
 
-                elif jogador.hp_atual > 0 and not atacou:
+                if jogador.hp_atual > 0 and nao_atacou:
                     lista.append(atacar(jogador, inimigo.inimigo))
 
                 hp_inimigos += inimigo.inimigo.hp_atual
@@ -115,6 +116,7 @@ class QuestView(View, LoginRequiredMixin):
 
             data['combate'] = combate(jogador, quest)
             vitoria = False
+
             if jogador.hp_atual > 0:
                 vitoria = True
                 data['vitoria'] = vitoria
