@@ -40,15 +40,15 @@ def atacar(atacante, defensor):
             if critico:
                 dano = atacante.dano * 2
                 atacante.hp_atual -= dano
-                return f'{atacante.nome} Acertou critico com {dano} de dano.'
+                return f'{atacante.nome} Acertou critico de {dano} no {defensor.nome}.'
             else:
                 dano = atacante.dano
                 defensor.hp_atual -= dano
-                return f'{atacante.nome} casou {dano} de dano.'
+                return f'{atacante.nome} casou {dano} de dano em {defensor.nome}.'
         else:
-            return f'{defensor.nome} defendeu'
+            return f'{defensor.nome} defendeu o ataque de {atacante.nome}'
     else:
-        return f'{atacante.nome} errou ataque'
+        return f'{atacante.nome} errou ataque seu ataque em {defensor.nome}'
 
 
 def combate(jogador, quest):
@@ -76,22 +76,26 @@ def combate(jogador, quest):
 
             for inimigo in inimigos:
                 jogador_ataca = True
-                inimigo_ataca = True
-                if inimigo.inimigo.hp_atual > 0 and jogador.agilidade > inimigo.inimigo.agilidade:
+                inimigo_ataca = inimigo.inimigo.hp_atual > 0
+
+                if inimigo_ataca and jogador.agilidade > inimigo.inimigo.agilidade:
                     # Jogador ataca primeiro.
                     lista.append(atacar(jogador, inimigo.inimigo))
-                    nao_atacou = False
-
-                if inimigo.inimigo.hp_atual > 0 and jogador.hp_atual:
+                    jogador_ataca = False
+                    print(f'{jogador} - {turno} ')
+                if inimigo_ataca and jogador.hp_atual > 0:
                     # inimigo ataca
                     lista.append(atacar(inimigo.inimigo, jogador))
                     # se jogador nao morreu ele ataca.
-
-                if jogador.hp_atual > 0 and nao_atacou:
+                    print(f'{inimigo.inimigo.nome} - {turno} ')
+                if jogador.hp_atual > 0 and jogador_ataca and inimigo_ataca:
                     lista.append(atacar(jogador, inimigo.inimigo))
-
+                    print(f'{jogador} - {turno} ')
                 hp_inimigos += inimigo.inimigo.hp_atual
 
+                if inimigo.inimigo.hp_atual <= 0:
+                    lista.append(f'{inimigo.inimigo.nome} morreu')
+                    print(f'{inimigo.inimigo.nome} morreu')
                 detalhes_combate[turno] = lista
 
             fim_combate = jogador.hp_atual > 0 and hp_inimigos > 0
