@@ -6,7 +6,7 @@ from base.models.armadura import Armadura
 from base.models.classe import Classe
 from base.models.inimigo import Inimigo
 from base.models.inventario import Inventario
-from base.models.itens import Receita
+from base.models.itens import Receita, MaterialCraft
 from base.models.personagem import Personagem
 from base.models.pocao import Pocao
 from base.models.quest import Quest, QuestInimigo
@@ -96,6 +96,10 @@ class ReceitaAdmin(admin.ModelAdmin):
 class InimigoAdmin(admin.ModelAdmin):
     pass
 
+class MaterialCraftAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(MaterialCraft, MaterialCraftAdmin)
 admin.site.register(Inimigo, InimigoAdmin)
 admin.site.register(Classe, ClasseAdmin)
 admin.site.register(Arma, ArmaAdmin)
