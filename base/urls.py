@@ -4,7 +4,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from base.views.forja import ForjaView, MostrarReceitasView
 from base.views.inventario import UsarPocaoView, EquiparView
-from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView
+from base.views.loja import LojaListView, ComprarArmaView, ComprarPocaoView, ComprarArmaduraView
 from base.views.luta import ListarAdversariosView, AtacarView
 from base.views.personagem import PersonagensListView, PersonagemCreatedView, logout_view, SelecionarView, \
     PersonagemDeleteView, PesonagemDetailView, AddAtaque, AddEnergia, AddRaiva, ClasseViewSet, \
@@ -46,7 +46,7 @@ urlpatterns = [
     # Loja
     path('loja', LojaListView.as_view(), name='loja'),
     path('comprar_arma', ComprarArmaView.as_view(), name='comprar_arma'),
-    path('comprar_armadura', ComprarArmaView.as_view(), name='comprar_armadura'),
+    path('comprar_armadura', ComprarArmaduraView.as_view(), name='comprar_armadura'),
     path('comprar_pocao', ComprarPocaoView.as_view(), name='comprar_pocao'),
 
     # Forja

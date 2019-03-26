@@ -150,11 +150,13 @@ class Personagem(models.Model):
 
     # funcao que recupera o player
     def refresh(self):
+        if self.hp_atual < 0:
+            self.hp_atual = 0
         # pega a hora atual
         # agora = datetime.datetime.now()
         agora = timezone.now()
         # verifica se o usuario tem menos HP do que deveria
-        if self.hp < self.hp_atual:
+        if self.hp_atual < self.hp:
             # verifica quanto tempo passou desde a ultima atualizacao do hp
             tempo = agora - self.hp_update
             # o hp atualiza a cada dois minutos
