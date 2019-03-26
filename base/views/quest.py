@@ -50,59 +50,49 @@ def atacar(atacante, defensor):
     else:
         return f'{atacante.nome} errou ataque seu ataque em {defensor.nome}'
 
+def vivo(individuo):
+    return individuo.hp_atual > 0
 
 def combate(jogador, quest):
 
-    if jogador.energia_atual < quest.gasto_energia:
-        return redirect('quests')
+    detalhes_combate = {}
 
-    if quest.inimigos.count() > 0:
+    inimigos = list(quest.inimigos.all())
 
-        detalhes_combate = {}
+    inimigos.sort(key=lambda a: a.inimigo.agilidade, reverse=True)
 
-        inimigos = list(quest.inimigos.all())
+    inimigos_totais = quest.inimigos.count()
 
-        inimigos.sort(key=lambda a: a.inimigo.agilidade, reverse=True)
+    turno = 1
 
-        fim_combate = True
+    while inimigos_totais > 0:
+        lista = []
+        for inimigo in inimigos:
+            if vivo(jogador) and vivo(inimigo.inimigo):
 
-        turno = 1
-
-        while fim_combate:
-
-            hp_inimigos = 0
-
-            lista = []
-
-            for inimigo in inimigos:
-                jogador_ataca = True
-                inimigo_ataca = inimigo.inimigo.hp_atual > 0
-
-                if inimigo_ataca and jogador.agilidade > inimigo.inimigo.agilidade:
-                    # Jogador ataca primeiro.
+                if jogador.agilidade > inimigo.inimigo.agilidade:
                     lista.append(atacar(jogador, inimigo.inimigo))
-                    jogador_ataca = False
-                    print(f'{jogador} - {turno} ')
-                if inimigo_ataca and jogador.hp_atual > 0:
-                    # inimigo ataca
+                    if vivo(inimigo.inimigo):
+                        lista.append(atacar(inimigo.inimigo, jogador))
+                else:
                     lista.append(atacar(inimigo.inimigo, jogador))
-                    # se jogador nao morreu ele ataca.
-                    print(f'{inimigo.inimigo.nome} - {turno} ')
-                if jogador.hp_atual > 0 and jogador_ataca and inimigo_ataca:
-                    lista.append(atacar(jogador, inimigo.inimigo))
-                    print(f'{jogador} - {turno} ')
-                hp_inimigos += inimigo.inimigo.hp_atual
+                    if vivo(jogador):
+                        lista.append(atacar(jogador, inimigo.inimigo))
 
                 if inimigo.inimigo.hp_atual <= 0:
+                    inimigos_totais -= 1
                     lista.append(f'{inimigo.inimigo.nome} morreu')
-                    print(f'{inimigo.inimigo.nome} morreu')
+
+                if jogador.hp_atual <= 0:
+                    inimigos_totais = 0
+                    lista.append(f'{jogador.nome} morreu')
+
                 detalhes_combate[turno] = lista
 
-            fim_combate = jogador.hp_atual > 0 and hp_inimigos > 0
+        turno += 1
 
-            turno += 1
 
-        return detalhes_combate
+    return detalhes_combate
 
 
 class QuestView(View, LoginRequiredMixin):
@@ -118,10 +108,15 @@ class QuestView(View, LoginRequiredMixin):
 
             quest = Quest.objects.get(pk=quest)
 
+            if jogador.energia_atual < quest.gasto_energia:
+                return redirect('quests')
+
             data['combate'] = combate(jogador, quest)
+
             vitoria = False
 
             if jogador.hp_atual > 0:
+
                 vitoria = True
                 data['vitoria'] = vitoria
                 # adiciona ganho de gold
@@ -139,7 +134,6 @@ class QuestView(View, LoginRequiredMixin):
                     item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.itemDrop,
                                                   inventario=Inventario.objects.get(personagem=jogador)),
                     data['drop'] = item
-
 
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
 

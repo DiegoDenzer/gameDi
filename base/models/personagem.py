@@ -116,6 +116,9 @@ class Personagem(models.Model):
     def get_absolute_url(self):
         return reverse('selecao', args=(self.pk,))
 
+
+
+
     # verifica se o player subiu de nível
     def level_up(self):
         # definimos a quantidade de xp para cada nivel
