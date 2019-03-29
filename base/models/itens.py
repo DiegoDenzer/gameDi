@@ -21,9 +21,8 @@ class MaterialCraft(models.Model):
         return '{}'.format(self.nome)
 
 
-
-
 class Receita(models.Model):
+
     id = UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     level = models.PositiveIntegerField(default=1)
     nome = models.CharField(max_length=100)

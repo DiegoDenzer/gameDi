@@ -8,7 +8,7 @@ from django.views import View
 from base.models.inventario import InventarioItem, Inventario
 from base.models.personagem import Personagem
 from base.models.quest import Quest
-from base.util.util import valida_jogador, rolar_dado
+from base.util.util import valida_jogador, rolar_dado, VALOR_DROP
 
 
 class QuestListView(View, LoginRequiredMixin):
@@ -130,10 +130,11 @@ class QuestView(View, LoginRequiredMixin):
                 data['xp'] = xp_ganha
 
                 # drop
-                if quest.itemDrop is not None:
-                    item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.itemDrop,
-                                                  inventario=Inventario.objects.get(personagem=jogador)),
-                    data['drop'] = item
+                if quest.materialDrop is not None:
+                    if quest.chance_material_drop >= randint(1, VALOR_DROP):
+                        item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.materialDrop,
+                                                      inventario=Inventario.objects.get(personagem=jogador)),
+                        data['drop'] = item
 
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
 

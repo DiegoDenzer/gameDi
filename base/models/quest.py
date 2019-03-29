@@ -18,8 +18,10 @@ class Quest(models.Model):
     ganho_experiencia = models.PositiveIntegerField(default=0)  # ganho de experiencia
     ganho_gold = models.PositiveIntegerField(default=0)  # ganho de gold
 
-    itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)  # Material para craft
-    chance_item_drop = models.PositiveIntegerField(default=0)
+    materialDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)  # Material para craft
+
+    chance_material_drop = models.PositiveIntegerField(default=0)
+       
 
     class Meta:
         db_table = 'quest'
