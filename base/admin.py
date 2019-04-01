@@ -5,7 +5,7 @@ from base.models.arma import Arma
 from base.models.armadura import Armadura
 from base.models.classe import Classe
 from base.models.inimigo import Inimigo
-from base.models.inventario import Inventario
+from base.models.inventario import Inventario, InventarioItem
 from base.models.itens import Receita, MaterialCraft
 from base.models.personagem import Personagem
 from base.models.pocao import Pocao
@@ -72,10 +72,11 @@ class PersonagemAdmin(admin.ModelAdmin):
         })
     )
 
+class InventarioItemTabular(admin.TabularInline):
+    model = InventarioItem
 
 class InvertarioAdmin(admin.ModelAdmin):
-    pass
-
+    inlines = (InventarioItemTabular,)
 
 class PocaoAdmin(admin.ModelAdmin):
     pass

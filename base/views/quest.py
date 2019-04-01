@@ -1,4 +1,6 @@
 import uuid
+from _ast import In
+from operator import inv
 from random import randint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -132,8 +134,19 @@ class QuestView(View, LoginRequiredMixin):
                 # drop
                 if quest.materialDrop is not None:
                     if quest.chance_material_drop >= randint(1, VALOR_DROP):
-                        item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.materialDrop,
-                                                      inventario=Inventario.objects.get(personagem=jogador)),
+
+                        inv = Inventario.objects.get(personagem=jogador)
+
+                        try:
+                            item = InventarioItem.objects.get(itemDrop=quest.materialDrop, inventario=inv)
+                            item.quantidade += 1
+                            item.save()
+                        except InventarioItem.DoesNotExist:
+
+                            item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.materialDrop,
+                                                                inventario=Inventario.objects.get(personagem=jogador),
+                                                                quantidade=1),
+
                         data['drop'] = item
 
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia

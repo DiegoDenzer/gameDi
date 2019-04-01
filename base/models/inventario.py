@@ -39,6 +39,7 @@ class InventarioItem(models.Model):
     armadura = models.ForeignKey(Armadura, on_delete=models.CASCADE, null=True, blank=True)
     itemDrop = models.ForeignKey(MaterialCraft, on_delete=models.CASCADE, null=True, blank=True)
     pocao = models.ForeignKey(Pocao, on_delete=models.CASCADE, null=True, blank=True)
+    quantidade = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         if self.arma is not None:
