@@ -52,8 +52,29 @@ def atacar(atacante, defensor):
     else:
         return f'{atacante.nome} errou ataque seu ataque em {defensor.nome}'
 
+
 def vivo(individuo):
     return individuo.hp_atual > 0
+
+
+def ordem_ataque(jogador, inimigo, lista):
+    if jogador.agilidade > inimigo.inimigo.agilidade:
+        lista.append(atacar(jogador, inimigo.inimigo))
+        if vivo(inimigo.inimigo):
+            lista.append(atacar(inimigo.inimigo, jogador))
+    else:
+        lista.append(atacar(inimigo.inimigo, jogador))
+        if vivo(jogador):
+            lista.append(atacar(jogador, inimigo.inimigo))
+
+
+def define_morte(inimigo, jogador, lista):
+    if inimigo.inimigo.hp_atual <= 0:
+        lista.append(f'{inimigo.inimigo.nome} morreu')
+        return 1
+    if jogador.hp_atual <= 0:
+        lista.append(f'{jogador.nome} morreu')
+        return 0
 
 def combate(jogador, quest):
 
@@ -71,24 +92,8 @@ def combate(jogador, quest):
         lista = []
         for inimigo in inimigos:
             if vivo(jogador) and vivo(inimigo.inimigo):
-
-                if jogador.agilidade > inimigo.inimigo.agilidade:
-                    lista.append(atacar(jogador, inimigo.inimigo))
-                    if vivo(inimigo.inimigo):
-                        lista.append(atacar(inimigo.inimigo, jogador))
-                else:
-                    lista.append(atacar(inimigo.inimigo, jogador))
-                    if vivo(jogador):
-                        lista.append(atacar(jogador, inimigo.inimigo))
-
-                if inimigo.inimigo.hp_atual <= 0:
-                    inimigos_totais -= 1
-                    lista.append(f'{inimigo.inimigo.nome} morreu')
-
-                if jogador.hp_atual <= 0:
-                    inimigos_totais = 0
-                    lista.append(f'{jogador.nome} morreu')
-
+                ordem_ataque(jogador,inimigo,lista)
+                define_morte(inimigo, jogador, lista)
                 detalhes_combate[turno] = lista
 
         turno += 1
@@ -96,6 +101,20 @@ def combate(jogador, quest):
 
     return detalhes_combate
 
+
+def drop_item(quest, jogador):
+    if quest.materialDrop is not None and quest.chance_material_drop >= randint(1, VALOR_DROP):
+        inv = Inventario.objects.get(personagem=jogador)
+        try:
+            item = InventarioItem.objects.get(itemDrop=quest.materialDrop, inventario=inv)
+            item.quantidade += 1
+            item.save()
+        except InventarioItem.DoesNotExist:
+
+            item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.materialDrop,
+                                                 inventario=Inventario.objects.get(personagem=jogador),
+                                                 quantidade=1)
+        return item
 
 class QuestView(View, LoginRequiredMixin):
     login_url = '/'
@@ -131,23 +150,7 @@ class QuestView(View, LoginRequiredMixin):
                 jogador.experiencia = jogador.experiencia + xp_ganha
                 data['xp'] = xp_ganha
 
-                # drop
-                if quest.materialDrop is not None:
-                    if quest.chance_material_drop >= randint(1, VALOR_DROP):
-
-                        inv = Inventario.objects.get(personagem=jogador)
-
-                        try:
-                            item = InventarioItem.objects.get(itemDrop=quest.materialDrop, inventario=inv)
-                            item.quantidade += 1
-                            item.save()
-                        except InventarioItem.DoesNotExist:
-
-                            item = InventarioItem.objects.create(id=uuid.uuid4(), itemDrop=quest.materialDrop,
-                                                                inventario=Inventario.objects.get(personagem=jogador),
-                                                                quantidade=1),
-
-                        data['drop'] = item
+                data['drop'] = drop_item(quest, jogador)
 
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
 
