@@ -69,12 +69,15 @@ def ordem_ataque(jogador, inimigo, lista):
 
 
 def define_morte(inimigo, jogador, lista):
+    inimigos_mortos = 0
     if inimigo.inimigo.hp_atual <= 0:
         lista.append(f'{inimigo.inimigo.nome} morreu')
-        return 1
+        inimigos_mortos += 1
     if jogador.hp_atual <= 0:
         lista.append(f'{jogador.nome} morreu')
-        return 0
+        return 99
+
+    return inimigos_mortos;
 
 def combate(jogador, quest):
 
@@ -93,11 +96,10 @@ def combate(jogador, quest):
         for inimigo in inimigos:
             if vivo(jogador) and vivo(inimigo.inimigo):
                 ordem_ataque(jogador,inimigo,lista)
-                define_morte(inimigo, jogador, lista)
+                inimigos_totais = inimigos_totais - define_morte(inimigo, jogador, lista)
                 detalhes_combate[turno] = lista
 
         turno += 1
-
 
     return detalhes_combate
 
@@ -115,6 +117,7 @@ def drop_item(quest, jogador):
                                                  inventario=Inventario.objects.get(personagem=jogador),
                                                  quantidade=1)
         return item
+
 
 class QuestView(View, LoginRequiredMixin):
     login_url = '/'
@@ -139,7 +142,7 @@ class QuestView(View, LoginRequiredMixin):
             if jogador.hp_atual > 0:
 
                 vitoria = True
-                data['vitoria'] = vitoria
+
                 # adiciona ganho de gold
                 ganho_de_gold = jogador.gold + (quest.ganho_gold * randint(1, 5))
                 jogador.gold = jogador.gold + ganho_de_gold
@@ -152,6 +155,7 @@ class QuestView(View, LoginRequiredMixin):
 
                 data['drop'] = drop_item(quest, jogador)
 
+            data['vitoria'] = vitoria
             jogador.energia_atual = jogador.energia_atual - quest.gasto_energia
 
             # verifica se subiu de nivel
